@@ -1,0 +1,32 @@
+#pragma once
+
+#include <tkge\Assets\IAsset.hpp>
+#include <string>
+#include <type_traits>
+#include <filesystem>
+
+namespace tkge
+{
+	class AssetLoader
+	{
+	  public:
+		  template <typename T>
+			  requires std::is_base_of_v<Assets::IAsset, T>
+		  std::unique_ptr<T> LoadAsset(const std::string& fileName)	const
+		  {
+			  const std::vector<std::filesystem::path> paths = this->GetSearchPaths();
+
+			  for (const auto& path : paths)
+			  {
+				  if (std::filesystem::exists(path / fileName))
+				  {
+					  return std::make_unique<T>((path / fileName).string());
+				  }
+			  }
+
+			  throw std::runtime_error("Asset not found: " + fileName);
+		  }
+
+		[[nodiscard]] std::vector<std::filesystem::path> GetSearchPaths() const;
+	};
+} // namespace tkge
