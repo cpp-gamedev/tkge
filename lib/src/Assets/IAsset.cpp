@@ -4,12 +4,12 @@
 #define WIN32_LEAN_AND_MEAN
 #define _AMD64_
 #include <Memoryapi.h>
+#include <wtypes.h>
 #include <WinBase.h>
 #include <errhandlingapi.h>
 #include <fileapi.h>
 #include <handleapi.h>
 #include <processthreadsapi.h>
-#include <wtypes.h>
 #elif defined(__linux__)
 #include <fcntl.h>
 #include <sys/mman.h>

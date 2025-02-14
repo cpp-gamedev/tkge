@@ -4,6 +4,7 @@
 #include <fstream>
 #include <span>
 #include <string>
+#include <memory>
 
 // Possible optimisations:
 #define ASSET_USE_MEMORY_MAPPED_FILES
