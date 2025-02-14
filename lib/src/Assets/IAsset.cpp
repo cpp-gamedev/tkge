@@ -71,9 +71,6 @@ namespace tkge::Assets::detail
 #ifdef _DEBUG
 				// runtime_assert(size + offset <= this->Size());
 #endif
-			SYSTEM_INFO sysInfo;
-			GetSystemInfo(&sysInfo);
-			const std::size_t pageSize = sysInfo.dwPageSize;
 
 			WIN32_MEMORY_RANGE_ENTRY range{};
 			range.VirtualAddress = static_cast<BYTE*>(_vView) + offset;
