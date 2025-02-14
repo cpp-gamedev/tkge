@@ -1,3 +1,4 @@
+#include <imgui.h>
 #include <tkge/engine.hpp>
 #include <exception>
 #include <print>
@@ -6,10 +7,12 @@ namespace
 {
 void Run()
 {
-	tkge::Engine engine;
+	static constexpr tkge::WindowSurface surface{.size = {1280, 720}};
+	tkge::Engine engine{surface};
 	while (engine.isRunning())
 	{
 		engine.nextFrame();
+		ImGui::ShowDemoWindow();
 		engine.beginRender();
 		engine.endRender();
 	}
