@@ -10,6 +10,10 @@
 #include <Memoryapi.h>		
 #include <wtypes.h>
 #include <WinBase.h>
+#elif defined(__linux__)
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <unistd.h>
 #endif
 
 namespace tkge::Assets::detail
@@ -51,7 +55,6 @@ namespace tkge::Assets::detail
 			if (this->_hMap != INVALID_HANDLE_VALUE) CloseHandle(this->_hMap);
 			if (this->_hFile != INVALID_HANDLE_VALUE) CloseHandle(this->_hFile);
 		}
-
 
 		[[nodiscard]] void* GetView() const override { return this->_vView; }
 		void Flush(const std::size_t offset, std::size_t size) override
@@ -105,6 +108,85 @@ namespace tkge::Assets::detail
 	};
 
 	using MemoryMappedFileImplementation = Win32MemoryMappedFile;
+#elif defined(__linux__)
+	class LinuxMemoryMappedFile final : public MemoryMappedFile
+	{
+	public:
+		explicit LinuxMemoryMappedFile(const std::string& filename)
+		{
+			this->_fd = open(filename.c_str(), O_RDWR);
+			if (this->_fd == -1)
+			{
+				throw std::runtime_error("Unable to open the file (code: " + std::to_string(errno) + ")");
+			}
+
+			off_t fileSize = lseek(this->_fd, 0, SEEK_END);
+			if (fileSize == -1)
+			{
+				close(this->_fd);
+				throw std::runtime_error("Unable to get the file size (code: " + std::to_string(errno) + ")");
+			}
+
+			this->_vView = mmap(nullptr, fileSize, PROT_READ | PROT_WRITE, MAP_SHARED, this->_fd, 0);
+			if (this->_vView == MAP_FAILED)
+			{
+				close(this->_fd);
+				throw std::runtime_error("Unable to create a view to the mapped object (code: " + std::to_string(errno) + ")");
+			}
+
+			this->_fileSize = static_cast<std::size_t>(fileSize);
+		}
+
+		~LinuxMemoryMappedFile() noexcept
+		{
+			if (this->_vView != MAP_FAILED)
+			{
+				munmap(this->_vView, this->_fileSize);
+			}
+			if (this->_fd != -1)
+			{
+				close(this->_fd);
+			}
+		}
+
+		[[nodiscard]] void* GetView() const override
+		{
+			return this->_vView;
+		}
+
+		void Flush(const std::size_t offset, std::size_t size) override
+		{
+			if (msync(static_cast<char*>(this->_vView) + offset, size, MS_SYNC) == -1)
+			{
+				throw std::runtime_error("Unable to flush the memory-mapped file (code: " + std::to_string(errno) + ")");
+			}
+		}
+
+		void Prefetch(const std::size_t offset, std::size_t size) override
+		{
+			if (madvise(static_cast<char*>(this->_vView) + offset, size, MADV_WILLNEED) == -1)
+			{
+				throw std::runtime_error("Unable to prefetch memory (code: " + std::to_string(errno) + ")");
+			}
+		}
+
+		[[nodiscard]] std::size_t Size() const override
+		{
+			return this->_fileSize;
+		}
+
+		[[nodiscard]] MemoryFileCapabilities Capabilities() const noexcept override
+		{
+			return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush;  // Modify based on your requirements
+		}
+
+	private:
+		int _fd{ -1 };
+		void* _vView{ MAP_FAILED };
+		std::size_t _fileSize{ 0 };
+	};
+
+	using MemoryMappedFileImplementation = LinuxMemoryMappedFile;
 #else
 #error Not implemented yet
 #endif
