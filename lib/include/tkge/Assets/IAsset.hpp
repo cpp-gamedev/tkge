@@ -162,11 +162,7 @@ namespace tkge::Assets
 	class IMoveableAsset : public virtual IAsset
 	{
 	  public:
-		  explicit IMoveableAsset(std::string filename)
-			  : _byteStream(std::move(filename))
-		  {
-
-		  }
+		explicit IMoveableAsset(std::string filename) : _byteStream(std::move(filename)) {}
 		//		static_assert(!std::is_base_of_v<ICopyableAsset<T>, T>, "Cannot derive from both move and copy assets!");
 		~IMoveableAsset() override = default;
 		[[nodiscard]] ReadonlyByteStream& byteStream() noexcept override { return this->_byteStream; }
@@ -181,11 +177,7 @@ namespace tkge::Assets
 	class ICopyableAsset : public virtual IAsset
 	{
 	  public:
-		  explicit ICopyableAsset(std::string filename)
-			  : _byteStream(std::make_shared<ReadonlyByteStream>(std::move(filename)))
-		  {
-
-		  }
+		explicit ICopyableAsset(std::string filename) : _byteStream(std::make_shared<ReadonlyByteStream>(std::move(filename))) {}
 		//		static_assert(!std::is_base_of_v<IMoveableAsset<T>, T>, "Cannot derive from both move and copy assets!");
 		~ICopyableAsset() override = default;
 		[[nodiscard]] ReadonlyByteStream& byteStream() noexcept override { return *this->_byteStream; }

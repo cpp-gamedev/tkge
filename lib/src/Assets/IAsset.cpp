@@ -3,16 +3,16 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define _AMD64_
+#include <Memoryapi.h>
+#include <WinBase.h>
 #include <errhandlingapi.h>
+#include <fileapi.h>
 #include <handleapi.h>
 #include <processthreadsapi.h>
-#include <fileapi.h>
-#include <Memoryapi.h>		
 #include <wtypes.h>
-#include <WinBase.h>
 #elif defined(__linux__)
-#include <sys/mman.h>
 #include <fcntl.h>
+#include <sys/mman.h>
 #include <unistd.h>
 #endif
 
@@ -59,8 +59,7 @@ namespace tkge::Assets::detail
 		[[nodiscard]] void* GetView() const override { return this->_vView; }
 		void Flush(const std::size_t offset, std::size_t size) override
 		{
-			if (size == 0)
-				size = this->Size();
+			if (size == 0) size = this->Size();
 			if (FlushViewOfFile(static_cast<std::byte*>(this->_vView) + offset, size)) return;
 			const auto errorCode = GetLastError();
 			throw std::runtime_error("Could not flush the view of file. Error code: " + std::to_string(errorCode));
@@ -70,7 +69,7 @@ namespace tkge::Assets::detail
 		{
 			if (size == 0) size = this->Size();
 #ifdef _DEBUG
-			//runtime_assert(size + offset <= this->Size());
+				// runtime_assert(size + offset <= this->Size());
 #endif
 			SYSTEM_INFO sysInfo;
 			GetSystemInfo(&sysInfo);
@@ -96,10 +95,7 @@ namespace tkge::Assets::detail
 			}
 			return static_cast<std::size_t>(fileSize.QuadPart);
 		}
-		[[nodiscard]] MemoryFileCapabilities Capabilities() const noexcept
-		{	
-			return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush;
-		}
+		[[nodiscard]] MemoryFileCapabilities Capabilities() const noexcept { return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush; }
 
 	  private:
 		HANDLE _hFile{INVALID_HANDLE_VALUE};
@@ -111,14 +107,11 @@ namespace tkge::Assets::detail
 #elif defined(__linux__)
 	class LinuxMemoryMappedFile final : public MemoryMappedFile
 	{
-	public:
+	  public:
 		explicit LinuxMemoryMappedFile(const std::string& filename)
 		{
 			this->_fd = open(filename.c_str(), O_RDWR);
-			if (this->_fd == -1)
-			{
-				throw std::runtime_error("Unable to open the file (code: " + std::to_string(errno) + ")");
-			}
+			if (this->_fd == -1) { throw std::runtime_error("Unable to open the file (code: " + std::to_string(errno) + ")"); }
 
 			off_t fileSize = lseek(this->_fd, 0, SEEK_END);
 			if (fileSize == -1)
@@ -139,20 +132,11 @@ namespace tkge::Assets::detail
 
 		~LinuxMemoryMappedFile() noexcept
 		{
-			if (this->_vView != MAP_FAILED)
-			{
-				munmap(this->_vView, this->_fileSize);
-			}
-			if (this->_fd != -1)
-			{
-				close(this->_fd);
-			}
+			if (this->_vView != MAP_FAILED) { munmap(this->_vView, this->_fileSize); }
+			if (this->_fd != -1) { close(this->_fd); }
 		}
 
-		[[nodiscard]] void* GetView() const override
-		{
-			return this->_vView;
-		}
+		[[nodiscard]] void* GetView() const override { return this->_vView; }
 
 		void Flush(const std::size_t offset, std::size_t size) override
 		{
@@ -170,20 +154,17 @@ namespace tkge::Assets::detail
 			}
 		}
 
-		[[nodiscard]] std::size_t Size() const override
-		{
-			return this->_fileSize;
-		}
+		[[nodiscard]] std::size_t Size() const override { return this->_fileSize; }
 
 		[[nodiscard]] MemoryFileCapabilities Capabilities() const noexcept override
 		{
-			return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush;  // Modify based on your requirements
+			return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush; // Modify based on your requirements
 		}
 
-	private:
-		int _fd{ -1 };
-		void* _vView{ MAP_FAILED };
-		std::size_t _fileSize{ 0 };
+	  private:
+		int _fd{-1};
+		void* _vView{MAP_FAILED};
+		std::size_t _fileSize{0};
 	};
 
 	using MemoryMappedFileImplementation = LinuxMemoryMappedFile;
@@ -221,7 +202,7 @@ std::span<const std::byte> tkge::Assets::ReadonlyByteStream::ReadChunk(const std
 #ifdef ASSET_USE_MEMORY_MAPPED_FILES
 	const std::byte* const vData = static_cast<std::byte*>(this->_file->GetView());
 	if (prefetchMemory && this->_file->Capabilities() & detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
-	return std::span{ vData + offset, size };
+	return std::span{vData + offset, size};
 #elif defined(ASSET_USE_FS_CACHE)
 #error Not implemented yet
 #else
