@@ -17,6 +17,7 @@ AllowShortBlocksOnASingleLine: Always
 AllowShortIfStatementsOnASingleLine: Always
 AllowShortLoopsOnASingleLine: true
 IndentRequires: true
+NamespaceIndentation: All
 IncludeCategories:
     # Headers in <> with .h extension.
     - Regex: '<([A-Za-z0-9\/-_])+\.h>'
@@ -28,4 +29,4 @@ IncludeCategories:
     - Regex: '<([A-Za-z0-9\/-_])+>'
       Priority: 30
 PointerAlignment: Left
-QualifierAlignment: Right
+QualifierAlignment: Left
