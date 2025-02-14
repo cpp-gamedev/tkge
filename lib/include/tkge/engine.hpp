@@ -22,8 +22,8 @@ class Engine
 
 	explicit Engine(WindowSurface const& surface = {}, vk::SampleCountFlagBits aa = AntiAliasing);
 
-	[[nodiscard]] auto framebufferSize() const -> glm::ivec2;
-	[[nodiscard]] auto isRunning() const -> bool;
+	[[nodiscard]] glm::ivec2 framebufferSize() const;
+	[[nodiscard]] bool isRunning() const;
 
 	vk::CommandBuffer nextFrame();
 	// TODO: return Renderer
@@ -31,7 +31,7 @@ class Engine
 	void endRender();
 
   private:
-	[[nodiscard]] auto createWindow(WindowSurface const& surface) -> kvf::UniqueWindow;
+	[[nodiscard]] kvf::UniqueWindow createWindow(WindowSurface const& surface);
 
 	kvf::UniqueWindow _window;
 	kvf::RenderDevice _renderDevice;

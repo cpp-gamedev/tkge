@@ -9,9 +9,9 @@ Engine::Engine(WindowSurface const& surface, vk::SampleCountFlagBits const aa)
 {
 }
 
-auto Engine::framebufferSize() const -> glm::ivec2 { return kvf::util::to_glm_vec<int>(_renderDevice.get_framebuffer_extent()); }
+glm::ivec2 Engine::framebufferSize() const { return kvf::util::to_glm_vec<int>(_renderDevice.get_framebuffer_extent()); }
 
-auto Engine::isRunning() const -> bool { return glfwWindowShouldClose(_window.get()) == GLFW_FALSE; }
+bool Engine::isRunning() const { return glfwWindowShouldClose(_window.get()) == GLFW_FALSE; }
 
 vk::CommandBuffer Engine::nextFrame()
 {
@@ -19,7 +19,7 @@ vk::CommandBuffer Engine::nextFrame()
 	return _cmd;
 }
 
-auto Engine::createWindow(WindowSurface const& surface) -> kvf::UniqueWindow
+kvf::UniqueWindow Engine::createWindow(WindowSurface const& surface)
 {
 	auto ret = kvf::create_window(surface.size, surface.title, surface.decorated);
 	KLIB_ASSERT(ret);
