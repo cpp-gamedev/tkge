@@ -48,7 +48,7 @@ namespace tkge::Assets
 			/// <param name="offset">An implementation may or may not use or suggest the flushing range with this parameter.</param>
 			/// <param name="size">Size of the flushing. An implementation may or may not use or suggest the flushing range with this parameter. It is defined
 			/// that when this parameter is 0, the entire file should get flushed</param>
-			[[nodiscard]] virtual void Flush(std::size_t offset = 0, std::size_t size = 0) = 0;
+			virtual void Flush(std::size_t offset = 0, std::size_t size = 0) = 0;
 
 			/// <summary>
 			/// Prefetch (if supported, please check Capabilities()) a range in the memory mapped file.
@@ -57,7 +57,7 @@ namespace tkge::Assets
 			/// <param name="offset">An implementation may either use it directly, or suggest the real prefetching offset. The range has to include the offset +
 			/// size, of course.</param> <param name="size">An implementation may use or suggest the size of flushing range, but the range size has to be at
 			/// least the specified size. The behaviour is unspecified if the size is 0.</param>
-			[[nodiscard]] virtual void Prefetch(std::size_t offset, std::size_t size) = 0;
+			virtual void Prefetch(std::size_t offset, std::size_t size) = 0;
 
 			/// <summary>
 			/// Retrieve the size of the memory mapped file.
@@ -105,7 +105,7 @@ namespace tkge::Assets
 			if (loadSize == std::dynamic_extent) throw std::logic_error("Must specify loadSize when using dynamic_extent");
 
 			const std::size_t loadBytesSize = sizeof(TUnit) * loadSize;
-			auto data = ReadChunk(offset, loadBytesSize);
+			auto data = ReadChunk(offset, loadBytesSize, false);
 
 			return {reinterpret_cast<TUnit*>(data.data()), loadSize};
 		}
