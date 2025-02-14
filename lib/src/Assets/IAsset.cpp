@@ -54,7 +54,7 @@ namespace tkge::Assets::detail
 
 
 		[[nodiscard]] void* GetView() const override { return this->_vView; }
-		[[nodiscard]] void Flush(const std::size_t offset, std::size_t size) override
+		void Flush(const std::size_t offset, std::size_t size) override
 		{
 			if (size == 0)
 				size = this->Size();
@@ -63,7 +63,7 @@ namespace tkge::Assets::detail
 			throw std::runtime_error("Could not flush the view of file. Error code: " + std::to_string(errorCode));
 		}
 
-		[[nodiscard]] void Prefetch(const std::size_t offset, std::size_t size) override
+		void Prefetch(const std::size_t offset, std::size_t size) override
 		{
 			if (size == 0) size = this->Size();
 #ifdef _DEBUG
