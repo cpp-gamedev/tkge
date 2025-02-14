@@ -1,7 +1,7 @@
 #include <klib/assert.hpp>
 #include <kvf/util.hpp>
-#include <tkge/engine.hpp>
 #include <tkge/Assets/TextAsset.hpp>
+#include <tkge/engine.hpp>
 #include <print>
 
 namespace tkge
