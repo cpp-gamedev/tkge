@@ -94,7 +94,10 @@ namespace tkge::Assets::detail
 			}
 			return static_cast<std::size_t>(fileSize.QuadPart);
 		}
-		[[nodiscard]] MemoryFileCapabilities Capabilities() const noexcept override { return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush; }
+		[[nodiscard]] MemoryFileCapabilities Capabilities() const noexcept override
+		{
+			return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush;
+		}
 
 	  private:
 		HANDLE _hFile{INVALID_HANDLE_VALUE};
