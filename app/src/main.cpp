@@ -5,18 +5,18 @@
 
 namespace
 {
-void Run()
-{
-	static constexpr tkge::WindowSurface surface{.size = {1280, 720}};
-	tkge::Engine engine{surface};
-	while (engine.isRunning())
+	void Run()
 	{
-		engine.nextFrame();
-		ImGui::ShowDemoWindow();
-		engine.beginRender();
-		engine.endRender();
+		static constexpr tkge::WindowSurface surface{.size = {1280, 720}};
+		tkge::Engine engine{surface};
+		while (engine.isRunning())
+		{
+			engine.nextFrame();
+			ImGui::ShowDemoWindow();
+			engine.beginRender();
+			engine.endRender();
+		}
 	}
-}
 } // namespace
 
 int main()
@@ -25,7 +25,7 @@ int main()
 	{
 		Run();
 	}
-	catch (std::exception const& e)
+	catch (const std::exception& e)
 	{
 		std::println(stderr, "PANIC: {}", e.what());
 		return EXIT_FAILURE;
