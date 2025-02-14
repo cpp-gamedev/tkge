@@ -33,10 +33,10 @@ class Engine
   private:
 	[[nodiscard]] auto createWindow(WindowSurface const& surface) -> kvf::UniqueWindow;
 
-	kvf::UniqueWindow m_window;
-	kvf::RenderDevice m_render_device;
-	kvf::RenderPass m_render_pass;
+	kvf::UniqueWindow _window;
+	kvf::RenderDevice _renderDevice;
+	kvf::RenderPass _renderPass;
 
-	vk::CommandBuffer m_cmd{};
+	vk::CommandBuffer _cmd{};
 };
 } // namespace tkge
