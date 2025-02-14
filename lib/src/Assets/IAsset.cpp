@@ -92,7 +92,7 @@ namespace tkge::Assets::detail
 			}
 			return static_cast<std::size_t>(fileSize.QuadPart);
 		}
-		[[nodiscard]] MemoryFileCapabilities Capabilities() const noexcept { return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush; }
+		[[nodiscard]] MemoryFileCapabilities Capabilities() const noexcept override { return MemoryFileCapabilities::Prefetch | MemoryFileCapabilities::ExplicitFlush; }
 
 	  private:
 		HANDLE _hFile{INVALID_HANDLE_VALUE};
@@ -117,7 +117,7 @@ namespace tkge::Assets::detail
 				throw std::runtime_error("Unable to get the file size (code: " + std::to_string(errno) + ")");
 			}
 
-			this->_vView = mmap(nullptr, fileSize, PROT_READ | PROT_WRITE, MAP_SHARED, this->_fd, 0);
+			this->_vView = mmap(nullptr, static_cast<std::size_t>(fileSize), PROT_READ | PROT_WRITE, MAP_SHARED, this->_fd, 0);
 			if (this->_vView == MAP_FAILED)
 			{
 				close(this->_fd);
