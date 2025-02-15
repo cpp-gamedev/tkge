@@ -38,7 +38,7 @@ namespace tkge
 
 		[[nodiscard]] AssetLoader& GetAssetLoader() noexcept { return this->_assetLoader; }
 		[[nodiscard]] const AssetLoader& GetAssetLoader() const noexcept { return this->_assetLoader; }
-    
+
 	  private:
 		[[nodiscard]] kvf::UniqueWindow CreateWindow(const WindowSurface& surface);
 
