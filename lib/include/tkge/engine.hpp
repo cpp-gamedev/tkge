@@ -23,26 +23,30 @@ namespace tkge
 
 		explicit Engine(const WindowSurface& surface = {}, vk::SampleCountFlagBits aa = AntiAliasing);
 
-		[[nodiscard]] glm::ivec2 framebufferSize() const;
-		[[nodiscard]] bool isRunning() const;
+		[[nodiscard]] const kvf::RenderDevice& RenderDevice() const { return _renderDevice; }
+		[[nodiscard]] const kvf::RenderPass& RenderPass() const { return _renderPass; }
 
-		vk::CommandBuffer nextFrame();
+		[[nodiscard]] glm::ivec2 FramebufferSize() const;
+		[[nodiscard]] auto FramebufferFormat() const -> vk::Format { return _renderPass.get_color_format(); }
+		[[nodiscard]] auto FramebufferSamples() const -> vk::SampleCountFlagBits { return _renderPass.get_samples(); }
+
+		[[nodiscard]] bool IsRunning() const;
+		vk::CommandBuffer NextFrame();
 		// TODO: return Renderer
-		void beginRender(kvf::Color clear = kvf::black_v);
-		void endRender();
+		void BeginRender(kvf::Color clear = kvf::black_v);
+		void EndRender();
 
 		[[nodiscard]] AssetLoader& GetAssetLoader() noexcept { return this->_assetLoader; }
 		[[nodiscard]] const AssetLoader& GetAssetLoader() const noexcept { return this->_assetLoader; }
-
+    
 	  private:
-		[[nodiscard]] kvf::UniqueWindow createWindow(const WindowSurface& surface);
+		[[nodiscard]] kvf::UniqueWindow CreateWindow(const WindowSurface& surface);
 
 		kvf::UniqueWindow _window;
 		kvf::RenderDevice _renderDevice;
 		kvf::RenderPass _renderPass;
 
 		vk::CommandBuffer _cmd{};
-
 		AssetLoader _assetLoader;
 	};
 } // namespace tkge
