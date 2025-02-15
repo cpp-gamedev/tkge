@@ -12,7 +12,7 @@ namespace tkge
 		_renderPass.set_color_target();
 		// TEST
 		const auto myTextDocument = this->GetAssetLoader().LoadAsset<tkge::Assets::TextAsset>("hello.txt");
-		std::println("Document content = '{}'", myTextDocument->ReadAllText());
+		std::println("Document content = '{}'", myTextDocument->text());
 	}
 
 	glm::ivec2 Engine::FramebufferSize() const { return kvf::util::to_glm_vec<int>(_renderDevice.get_framebuffer_extent()); }

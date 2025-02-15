@@ -135,40 +135,6 @@ namespace tkge::Assets
 	{
 	  public:
 		virtual ~IAsset() = default;
-
-	  protected:
-		[[nodiscard]] virtual ReadonlyByteStream& byteStream() noexcept = 0;
-		[[nodiscard]] virtual const ReadonlyByteStream& byteStream() const noexcept = 0;
-	};
-
-	template <typename T>
-	class IMoveableAsset : public virtual IAsset
-	{
-	  public:
-		explicit IMoveableAsset(std::string filename) : _byteStream(std::move(filename)) {}
-		//		static_assert(!std::is_base_of_v<ICopyableAsset<T>, T>, "Cannot derive from both move and copy assets!");
-		~IMoveableAsset() override = default;
-		[[nodiscard]] ReadonlyByteStream& byteStream() noexcept override { return this->_byteStream; }
-		[[nodiscard]] const ReadonlyByteStream& byteStream() const noexcept override { return this->_byteStream; }
-
-	  private:
-		ReadonlyByteStream _byteStream;
-
-		friend T;
-	};
-	template <typename T>
-	class ICopyableAsset : public virtual IAsset
-	{
-	  public:
-		explicit ICopyableAsset(std::string filename) : _byteStream(std::make_shared<ReadonlyByteStream>(std::move(filename))) {}
-		//		static_assert(!std::is_base_of_v<IMoveableAsset<T>, T>, "Cannot derive from both move and copy assets!");
-		~ICopyableAsset() override = default;
-		[[nodiscard]] ReadonlyByteStream& byteStream() noexcept override { return *this->_byteStream; }
-		[[nodiscard]] const ReadonlyByteStream& byteStream() const noexcept override { return *this->_byteStream; }
-
-	  private:
-		std::shared_ptr<ReadonlyByteStream> _byteStream;
-
-		friend T;
+		virtual void Load(ReadonlyByteStream) = 0;
 	};
 } // namespace tkge::Assets
