@@ -1,6 +1,8 @@
 #include <klib/assert.hpp>
 #include <kvf/util.hpp>
+#include <tkge/Assets/TextAsset.hpp>
 #include <tkge/engine.hpp>
+#include <print>
 
 namespace tkge
 {
@@ -8,6 +10,9 @@ namespace tkge
 		: _window(CreateWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa)
 	{
 		_renderPass.set_color_target();
+		// TEST
+		const auto myTextDocument = this->GetAssetLoader().LoadAsset<tkge::Assets::TextAsset>("hello.txt");
+		std::println("Document content = '{}'", myTextDocument->ReadAllText());
 	}
 
 	glm::ivec2 Engine::FramebufferSize() const { return kvf::util::to_glm_vec<int>(_renderDevice.get_framebuffer_extent()); }
