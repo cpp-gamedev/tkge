@@ -22,16 +22,16 @@ class Engine
 
 	explicit Engine(WindowSurface const& surface = {}, vk::SampleCountFlagBits aa = AntiAliasing);
 
-	[[nodiscard]] glm::ivec2 framebufferSize() const;
-	[[nodiscard]] bool isRunning() const;
+	[[nodiscard]] glm::ivec2 FramebufferSize() const;
+	[[nodiscard]] bool IsRunning() const;
 
-	vk::CommandBuffer nextFrame();
+	vk::CommandBuffer NextFrame();
 	// TODO: return Renderer
-	void beginRender(kvf::Color clear = kvf::black_v);
-	void endRender();
+	void BeginRender(kvf::Color clear = kvf::black_v);
+	void EndRender();
 
   private:
-	[[nodiscard]] kvf::UniqueWindow createWindow(WindowSurface const& surface);
+	[[nodiscard]] kvf::UniqueWindow CreateWindow(WindowSurface const& surface);
 
 	kvf::UniqueWindow _window;
 	kvf::RenderDevice _renderDevice;
