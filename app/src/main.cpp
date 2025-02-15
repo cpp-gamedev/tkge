@@ -30,8 +30,9 @@ std::vector<std::uint32_t> LoadSpirV(klib::CString const path)
 	if (!file) { return {}; }
 
 	auto const size = file.tellg();
-	file.seekg(std::ios::beg, {});
+	if (std::size_t(size) % sizeof(std::uint32_t) != 0) { return {}; } // invalid SPIR-V.
 
+	file.seekg(std::ios::beg, {});
 	auto ret = std::vector<std::uint32_t>{};
 	ret.resize(std::size_t(size) / sizeof(std::uint32_t));
 	file.read(reinterpret_cast<char*>(ret.data()), size); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
