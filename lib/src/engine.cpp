@@ -5,21 +5,21 @@
 namespace tkge
 {
 Engine::Engine(WindowSurface const& surface, vk::SampleCountFlagBits const aa)
-	: _window(createWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa)
+	: _window(CreateWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa)
 {
 }
 
-glm::ivec2 Engine::framebufferSize() const { return kvf::util::to_glm_vec<int>(_renderDevice.get_framebuffer_extent()); }
+glm::ivec2 Engine::FramebufferSize() const { return kvf::util::to_glm_vec<int>(_renderDevice.get_framebuffer_extent()); }
 
-bool Engine::isRunning() const { return glfwWindowShouldClose(_window.get()) == GLFW_FALSE; }
+bool Engine::IsRunning() const { return glfwWindowShouldClose(_window.get()) == GLFW_FALSE; }
 
-vk::CommandBuffer Engine::nextFrame()
+vk::CommandBuffer Engine::NextFrame()
 {
 	_cmd = _renderDevice.next_frame();
 	return _cmd;
 }
 
-kvf::UniqueWindow Engine::createWindow(WindowSurface const& surface)
+kvf::UniqueWindow Engine::CreateWindow(WindowSurface const& surface)
 {
 	auto ret = kvf::create_window(surface.size, surface.title, surface.decorated);
 	KLIB_ASSERT(ret);
@@ -29,13 +29,13 @@ kvf::UniqueWindow Engine::createWindow(WindowSurface const& surface)
 	return ret;
 }
 
-void Engine::beginRender(kvf::Color const clear)
+void Engine::BeginRender(kvf::Color const clear)
 {
 	_renderPass.clear_color = clear.to_linear();
 	_renderPass.begin_render(_cmd, _renderDevice.get_framebuffer_extent());
 }
 
-void Engine::endRender()
+void Engine::EndRender()
 {
 	_renderPass.end_render();
 	_renderDevice.render(_renderPass.render_target());

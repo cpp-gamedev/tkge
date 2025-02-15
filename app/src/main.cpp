@@ -9,12 +9,12 @@ void Run()
 {
 	static constexpr tkge::WindowSurface surface{.size = {1280, 720}};
 	tkge::Engine engine{surface};
-	while (engine.isRunning())
+	while (engine.IsRunning())
 	{
-		engine.nextFrame();
+		engine.NextFrame();
 		ImGui::ShowDemoWindow();
-		engine.beginRender();
-		engine.endRender();
+		engine.BeginRender();
+		engine.EndRender();
 	}
 }
 } // namespace
