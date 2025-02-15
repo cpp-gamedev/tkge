@@ -22,9 +22,14 @@ class Engine
 
 	explicit Engine(WindowSurface const& surface = {}, vk::SampleCountFlagBits aa = AntiAliasing);
 
-	[[nodiscard]] glm::ivec2 FramebufferSize() const;
-	[[nodiscard]] bool IsRunning() const;
+	[[nodiscard]] kvf::RenderDevice const& RenderDevice() const { return _renderDevice; }
+	[[nodiscard]] kvf::RenderPass const& RenderPass() const { return _renderPass; }
 
+	[[nodiscard]] glm::ivec2 FramebufferSize() const;
+	[[nodiscard]] auto FramebufferFormat() const -> vk::Format { return _renderPass.get_color_format(); }
+	[[nodiscard]] auto FramebufferSamples() const -> vk::SampleCountFlagBits { return _renderPass.get_samples(); }
+
+	[[nodiscard]] bool IsRunning() const;
 	vk::CommandBuffer NextFrame();
 	// TODO: return Renderer
 	void BeginRender(kvf::Color clear = kvf::black_v);

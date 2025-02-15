@@ -7,6 +7,7 @@ namespace tkge
 Engine::Engine(WindowSurface const& surface, vk::SampleCountFlagBits const aa)
 	: _window(CreateWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa)
 {
+	_renderPass.set_color_target();
 }
 
 glm::ivec2 Engine::FramebufferSize() const { return kvf::util::to_glm_vec<int>(_renderDevice.get_framebuffer_extent()); }
