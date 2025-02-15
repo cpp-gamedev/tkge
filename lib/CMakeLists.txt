@@ -25,5 +25,4 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
 
 file(GLOB_RECURSE sources LIST_DIRECTORIES false "src/*.[hc]pp")
 target_sources(${PROJECT_NAME} PRIVATE
-  ${sources}
-)
+  ${sources})

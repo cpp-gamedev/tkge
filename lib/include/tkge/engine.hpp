@@ -5,6 +5,7 @@
 #include <kvf/render_device.hpp>
 #include <kvf/render_pass.hpp>
 #include <kvf/window.hpp>
+#include <tkge/assetLoader.hpp>
 #include <tkge/graphics/renderer.hpp>
 
 namespace tkge
@@ -34,6 +35,9 @@ namespace tkge
 		[[nodiscard]] graphics::Renderer BeginRender(kvf::Color clear = kvf::black_v);
 		void Present();
 
+		[[nodiscard]] AssetLoader& GetAssetLoader() noexcept { return this->_assetLoader; }
+		[[nodiscard]] const AssetLoader& GetAssetLoader() const noexcept { return this->_assetLoader; }
+
 	  private:
 		[[nodiscard]] kvf::UniqueWindow CreateWindow(const WindowSurface& surface);
 
@@ -44,5 +48,6 @@ namespace tkge
 		graphics::ResourcePool _resourcePool;
 
 		vk::CommandBuffer _cmd{};
+		AssetLoader _assetLoader;
 	};
 } // namespace tkge
