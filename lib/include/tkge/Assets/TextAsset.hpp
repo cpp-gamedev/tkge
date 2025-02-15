@@ -4,11 +4,18 @@
 
 namespace tkge::Assets
 {
-	class TextAsset final : public ICopyableAsset<TextAsset>
+	class TextAsset final : public IAsset
 	{
 	  public:
-		explicit TextAsset(std::string filename) : ICopyableAsset(std::move(filename)) {}
-		[[nodiscard]] std::string ReadAllText() const;
-		[[nodiscard]] std::string ReadAt(std::size_t position, std::size_t size) const;
+		explicit TextAsset() = default;
+		void Load(ReadonlyByteStream byteStream) override
+		{
+			const auto vData = byteStream.AsSpan<char>(0, byteStream.GetStreamSize());
+			this->_text = std::string{ vData.begin(), vData.end() };
+		}
+
+		[[nodiscard]] const std::string& text() const noexcept { return this->_text; }
+	private:
+		std::string _text;
 	};
 } // namespace tkge::Assets
