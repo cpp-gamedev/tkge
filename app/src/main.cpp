@@ -65,16 +65,29 @@ namespace
 		const auto pipeline = renderDevice.create_pipeline(*pipelineLayout, pipelineState, pipelineFormat);
 		if (!pipeline) { throw std::runtime_error{"Failed to create graphics pipeline"}; }
 
+		auto wireframe = false;
+		auto lineWidth = 3.0f;
+
 		while (engine.IsRunning())
 		{
-			const auto commandBuffer = engine.NextFrame();
+			engine.NextFrame();
 
-			ImGui::ShowDemoWindow();
+			if (ImGui::Begin("Misc"))
+			{
+				ImGui::Checkbox("wireframe", &wireframe);
+				ImGui::DragFloat("line width", &lineWidth, 1.0f, 1.0f, 100.0f);
+			}
+			ImGui::End();
 
-			engine.BeginRender();
-			engine.RenderPass().bind_pipeline(*pipeline);
-			commandBuffer.draw(3, 1, 0, 0);
-			engine.EndRender();
+			if (auto renderer = engine.BeginRender())
+			{
+				renderer.BindShader(shader);
+				renderer.SetLineWidth(lineWidth);
+				renderer.SetWireframe(wireframe);
+				renderer.Draw(3);
+			}
+
+			engine.Present();
 		}
 
 		renderDevice.get_device().waitIdle();

@@ -1,18 +1,15 @@
 #include <klib/assert.hpp>
+#include <kvf/is_positive.hpp>
 #include <kvf/util.hpp>
-#include <tkge/Assets/TextAsset.hpp>
 #include <tkge/engine.hpp>
 #include <print>
 
 namespace tkge
 {
 	Engine::Engine(const WindowSurface& surface, const vk::SampleCountFlagBits aa)
-		: _window(CreateWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa)
+		: _window(CreateWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa), _resourcePool(&_renderDevice, aa)
 	{
 		_renderPass.set_color_target();
-		// TEST
-		const auto myTextDocument = this->GetAssetLoader().LoadAsset<tkge::Assets::TextAsset>("hello.txt");
-		std::println("Document content = '{}'", myTextDocument->ReadAllText());
 	}
 
 	glm::ivec2 Engine::FramebufferSize() const { return kvf::util::to_glm_vec<int>(_renderDevice.get_framebuffer_extent()); }
@@ -35,15 +32,20 @@ namespace tkge
 		return ret;
 	}
 
-	void Engine::BeginRender(const kvf::Color clear)
+	graphics::Renderer Engine::BeginRender(const kvf::Color clear)
 	{
+		if (!_cmd) { return {}; }
+
+		const auto framebufferSize = FramebufferSize();
+		if (!kvf::is_positive(framebufferSize)) { return {}; }
+
 		_renderPass.clear_color = clear.to_linear();
-		_renderPass.begin_render(_cmd, _renderDevice.get_framebuffer_extent());
+		return graphics::Renderer{&_renderPass, &_resourcePool, _cmd, framebufferSize};
 	}
 
-	void Engine::EndRender()
+	void Engine::Present()
 	{
-		_renderPass.end_render();
+		if (_renderPass.get_command_buffer()) { _renderPass.end_render(); }
 		_renderDevice.render(_renderPass.render_target());
 	}
 } // namespace tkge
