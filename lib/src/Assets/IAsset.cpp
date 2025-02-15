@@ -176,49 +176,22 @@ namespace tkge::Assets::detail
 } // namespace tkge::Assets::detail
 
 tkge::Assets::ReadonlyByteStream::ReadonlyByteStream(const std::string& filename)
-#ifdef ASSET_USE_MEMORY_MAPPED_FILES
 	: _file(std::make_unique<tkge::Assets::detail::MemoryMappedFileImplementation>(filename))
-#elif defined(ASSET_USE_FS_CACHE)
-#error Not implemented yet
-#else
-#error Not implemented yet
-#endif
 {
 }
 
 std::span<std::byte> tkge::Assets::ReadonlyByteStream::ReadChunk(const std::size_t offset, const std::size_t size, const bool prefetchMemory)
 {
-#ifdef ASSET_USE_MEMORY_MAPPED_FILES
 	std::byte* const vData = static_cast<std::byte*>(this->_file->GetView());
 	if (prefetchMemory && this->_file->Capabilities() & detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
 	return std::span{vData + offset, size};
-#elif defined(ASSET_USE_FS_CACHE)
-#error Not implemented yet
-#else
-#error Not implemented yet
-#endif
 }
 
 std::span<const std::byte> tkge::Assets::ReadonlyByteStream::ReadChunk(const std::size_t offset, const std::size_t size, const bool prefetchMemory) const
 {
-#ifdef ASSET_USE_MEMORY_MAPPED_FILES
 	const std::byte* const vData = static_cast<std::byte*>(this->_file->GetView());
 	if (prefetchMemory && this->_file->Capabilities() & detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
 	return std::span{vData + offset, size};
-#elif defined(ASSET_USE_FS_CACHE)
-#error Not implemented yet
-#else
-#error Not implemented yet
-#endif
 }
 
-std::size_t tkge::Assets::ReadonlyByteStream::GetStreamSize() const
-{
-#ifdef ASSET_USE_MEMORY_MAPPED_FILES
-	return this->_file->Size();
-#elif defined(ASSET_USE_FS_CACHE)
-#error Not implemented yet
-#else
-#error Not implemented yet
-#endif
-}
+std::size_t tkge::Assets::ReadonlyByteStream::GetStreamSize() const { return this->_file->Size(); }

@@ -6,15 +6,10 @@
 #include <span>
 #include <string>
 
-// Possible optimisations:
-#define ASSET_USE_MEMORY_MAPPED_FILES
-// #define ASSET_USE_FS_CACHE
-
 namespace tkge::Assets
 {
 	namespace detail
 	{
-#ifdef ASSET_USE_MEMORY_MAPPED_FILES
 		enum struct MemoryFileCapabilities : std::uint8_t
 		{
 			None = 0,
@@ -72,13 +67,6 @@ namespace tkge::Assets
 			/// <returns>Capabilities of the implementation</returns>
 			[[nodiscard]] virtual MemoryFileCapabilities Capabilities() const noexcept = 0;
 		};
-#elif defined(ASSET_USE_FS_CACHE)
-		class AssetFileCache
-		{
-		  public:
-		  private:
-		};
-#endif
 	} // namespace detail
 
 	class ReadonlyByteStream
@@ -140,13 +128,7 @@ namespace tkge::Assets
 		std::span<std::byte> ReadChunk(std::size_t offset, std::size_t size, bool prefetchMemory);
 		std::span<const std::byte> ReadChunk(std::size_t offset, std::size_t size, bool prefetchMemory) const;
 
-#ifdef ASSET_USE_MEMORY_MAPPED_FILES
 		std::unique_ptr<detail::MemoryMappedFile> _file;
-#elif defined(ASSET_USE_FS_CACHE)
-		AssetFileCache _cache;
-#else
-		std::ifstream _file;
-#endif
 	};
 
 	class IAsset

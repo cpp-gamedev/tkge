@@ -1,5 +1,4 @@
 #include <tkge/Assets/TextAsset.hpp>
-
 std::string tkge::Assets::TextAsset::ReadAllText() const
 {
 	const auto vData = this->byteStream().AsSpan<char>(0, this->byteStream().GetStreamSize());
