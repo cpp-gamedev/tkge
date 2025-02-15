@@ -4,7 +4,7 @@
 
 namespace tkge::Assets
 {
-	class TextAsset final : public IAsset
+	class TextAsset final : public ICopyableAsset<TextAsset>
 	{
 	  public:
 		explicit TextAsset() = default;
