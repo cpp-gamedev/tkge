@@ -18,13 +18,7 @@ namespace tkge
 
 			for (const auto& path : paths)
 			{
-				if (std::filesystem::exists(path / fileName))
-				{
-					auto asset = std::make_unique<T>();
-					Assets::ReadonlyByteStream byteStream{(path / fileName).string()};
-					asset->Load(std::move(byteStream));
-					return asset;
-				}
+				if (std::filesystem::exists(path / fileName)) { return std::make_unique<T>((path / fileName).string()); }
 			}
 
 			throw std::runtime_error("Asset not found: " + fileName);
