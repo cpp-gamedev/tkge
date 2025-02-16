@@ -45,7 +45,7 @@ namespace Tkge
 		kvf::RenderDevice _renderDevice;
 		kvf::RenderPass _renderPass;
 
-		Graphics::ResourcePool _resourcePool;
+		std::unique_ptr<Graphics::IResourcePool> _resourcePool{};
 
 		vk::CommandBuffer _cmd{};
 		AssetLoader _assetLoader;

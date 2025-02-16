@@ -1,43 +1,24 @@
 #pragma once
+#include <Tkge/Graphics/PipelineFixedState.hpp>
 #include <Tkge/Graphics/Shader.hpp>
-#include <kvf/render_device.hpp>
-#include <unordered_map>
+#include <kvf/vma.hpp>
 
 namespace Tkge::Graphics
 {
-	class PipelinePool
+	using Buffer = kvf::vma::Buffer;
+
+	class IResourcePool : public klib::Polymorphic
 	{
 	  public:
-		struct Params
-		{
-			vk::Format colourFormat{};
+		[[nodiscard]] virtual vk::PipelineLayout PipelineLayout() const = 0;
 
-			vk::PrimitiveTopology topology{vk::PrimitiveTopology::eTriangleList};
-			vk::PolygonMode polygonMode{vk::PolygonMode::eFill};
-		};
+		/// \brief Get the Pipeline identified by the input parameters.
+		/// \param shader Shader that will be used in draw calls (dynamic Pipeline state).
+		/// \param state Fixed Pipeline state.
+		/// \returns Existing Pipeline if already cached, otherwise a newly created one (unless creation fails).
+		[[nodiscard]] virtual vk::Pipeline GetPipeline(const Shader& shader, const PipelineFixedState& state) = 0;
 
-		explicit PipelinePool(gsl::not_null<const kvf::RenderDevice*> renderDevice, vk::SampleCountFlagBits framebufferSamples);
-
-		[[nodiscard]] vk::PipelineLayout PipelineLayout() const { return *_pipelineLayout; }
-
-		[[nodiscard]] vk::Pipeline GetPipeline(const Shader& shader, const Params& params);
-
-	  private:
-		gsl::not_null<const kvf::RenderDevice*> _renderDevice;
-		vk::SampleCountFlagBits _framebufferSamples;
-
-		vk::UniquePipelineLayout _pipelineLayout{};
-		std::unordered_map<std::size_t, vk::UniquePipeline> _pipelines{};
-	};
-
-	class ResourcePool
-	{
-	  public:
-		explicit ResourcePool(gsl::not_null<const kvf::RenderDevice*> renderDevice, vk::SampleCountFlagBits framebufferSamples)
-			: pipelinePool(renderDevice, framebufferSamples)
-		{
-		}
-
-		PipelinePool pipelinePool;
+		/// \brief Allocate a Buffer for given usage and of given size.
+		[[nodiscard]] virtual Buffer& AllocateBuffer(vk::BufferUsageFlags usage, vk::DeviceSize size) = 0;
 	};
 } // namespace Tkge::Graphics

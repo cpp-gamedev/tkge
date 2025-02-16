@@ -1,3 +1,5 @@
+#include <Detail/BufferPool.hpp>
+#include <Detail/PipelinePool.hpp>
 #include <Tkge/Engine.hpp>
 #include <klib/assert.hpp>
 #include <kvf/is_positive.hpp>
@@ -6,8 +8,39 @@
 
 namespace Tkge
 {
+	namespace
+	{
+		class ResourcePool : public Graphics::IResourcePool
+		{
+		  public:
+			explicit ResourcePool(gsl::not_null<kvf::RenderDevice*> renderDevice, vk::SampleCountFlagBits framebufferSamples)
+				: _pipelinePool(renderDevice, framebufferSamples), _bufferPool(renderDevice)
+			{
+			}
+
+			[[nodiscard]] vk::PipelineLayout PipelineLayout() const final { return _pipelinePool.PipelineLayout(); }
+
+			[[nodiscard]] vk::Pipeline GetPipeline(const Graphics::Shader& shader, const Graphics::PipelineFixedState& state) final
+			{
+				return _pipelinePool.GetPipeline(shader, state);
+			}
+
+			[[nodiscard]] Graphics::Buffer& AllocateBuffer(const vk::BufferUsageFlags usage, const vk::DeviceSize size) final
+			{
+				return _bufferPool.Allocate(usage, size);
+			}
+
+			void NextFrame() { _bufferPool.NextFrame(); }
+
+		  private:
+			Detail::PipelinePool _pipelinePool;
+			Detail::BufferPool _bufferPool;
+		};
+	} // namespace
+
 	Engine::Engine(const WindowSurface& surface, const vk::SampleCountFlagBits aa)
-		: _window(CreateWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa), _resourcePool(&_renderDevice, aa)
+		: _window(CreateWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa),
+		  _resourcePool(std::make_unique<ResourcePool>(&_renderDevice, aa))
 	{
 		_renderPass.set_color_target();
 	}
@@ -19,6 +52,7 @@ namespace Tkge
 	vk::CommandBuffer Engine::NextFrame()
 	{
 		_cmd = _renderDevice.next_frame();
+		static_cast<ResourcePool*>(_resourcePool.get())->NextFrame(); // NOLINT(cppcoreguidelines-pro-type-static-cast-downcast)
 		return _cmd;
 	}
 
@@ -40,7 +74,7 @@ namespace Tkge
 		if (!kvf::is_positive(framebufferSize)) { return {}; }
 
 		_renderPass.clear_color = clear.to_linear();
-		return Graphics::Renderer{&_renderPass, &_resourcePool, _cmd, framebufferSize};
+		return Graphics::Renderer{&_renderPass, _resourcePool.get(), _cmd, framebufferSize};
 	}
 
 	void Engine::Present()

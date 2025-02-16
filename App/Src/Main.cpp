@@ -50,20 +50,21 @@ namespace
 		const auto& renderDevice = engine.RenderDevice();
 		if (!shader.Load(renderDevice.get_device(), vertexSpirV, fragmentSpirV)) { throw std::runtime_error{"Failed to load shaders"}; }
 
-		const auto pipelineLayout = renderDevice.get_device().createPipelineLayoutUnique({});
+		constexpr auto vertices = std::array{
+			Tkge::Graphics::Vertex{.position = {-0.5f, -0.5f}, .colour = kvf::red_v.to_vec4()},
+			Tkge::Graphics::Vertex{.position = {0.5f, -0.5f}, .colour = kvf::green_v.to_vec4()},
+			Tkge::Graphics::Vertex{.position = {0.5f, 0.5f}, .colour = kvf::blue_v.to_vec4()},
+			Tkge::Graphics::Vertex{.position = {-0.5f, 0.5f}, .colour = kvf::yellow_v.to_vec4()},
+		};
 
-		const auto pipelineState = kvf::PipelineState{
-			.vertex_bindings = {},
-			.vertex_attributes = {},
-			.vertex_shader = shader.VertexModule(),
-			.fragment_shader = shader.FragmentModule(),
+		constexpr auto indices = std::array{
+			0u, 1u, 2u, 2u, 3u, 0u,
 		};
-		const auto pipelineFormat = kvf::PipelineFormat{
-			.samples = engine.FramebufferSamples(),
-			.color = engine.FramebufferFormat(),
+
+		const auto primitive = Tkge::Graphics::Primitive{
+			.vertices = vertices,
+			.indices = indices,
 		};
-		const auto pipeline = renderDevice.create_pipeline(*pipelineLayout, pipelineState, pipelineFormat);
-		if (!pipeline) { throw std::runtime_error{"Failed to create graphics pipeline"}; }
 
 		auto wireframe = false;
 		auto lineWidth = 3.0f;
@@ -84,7 +85,7 @@ namespace
 				renderer.BindShader(shader);
 				renderer.SetLineWidth(lineWidth);
 				renderer.SetWireframe(wireframe);
-				renderer.Draw(3);
+				renderer.Draw(primitive);
 			}
 
 			engine.Present();

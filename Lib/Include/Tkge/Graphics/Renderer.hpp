@@ -1,4 +1,5 @@
 #pragma once
+#include <Tkge/Graphics/Primitive.hpp>
 #include <Tkge/Graphics/ResourcePool.hpp>
 #include <kvf/render_pass.hpp>
 
@@ -14,7 +15,7 @@ namespace Tkge::Graphics
 
 		Renderer() = default;
 
-		explicit Renderer(kvf::RenderPass* renderPass, ResourcePool* resourcePool, vk::CommandBuffer commandBuffer, glm::ivec2 framebufferSize);
+		explicit Renderer(kvf::RenderPass* renderPass, IResourcePool* resourcePool, vk::CommandBuffer commandBuffer, glm::ivec2 framebufferSize);
 		~Renderer() { EndRender(); }
 
 		[[nodiscard]] bool IsRendering() const { return _renderPass != nullptr; }
@@ -24,14 +25,15 @@ namespace Tkge::Graphics
 		void SetLineWidth(float width);
 		void SetWireframe(bool wireframe);
 
-		// temporary, until we have vertices, primitives, etc
-		void Draw(std::uint32_t vertices);
+		void Draw(const Primitive& primitive);
 
 		explicit operator bool() const { return IsRendering(); }
 
 	  private:
+		void BindVboAndDraw(const Primitive& primitive) const;
+
 		kvf::RenderPass* _renderPass{};
-		ResourcePool* _resourcePool{};
+		IResourcePool* _resourcePool{};
 
 		const Shader* _shader{};
 		vk::Pipeline _pipeline{};
