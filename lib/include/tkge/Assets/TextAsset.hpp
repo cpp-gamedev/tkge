@@ -12,6 +12,7 @@ namespace tkge::Assets
 		{
 			const auto vData = byteStream.AsSpan<char>(0, byteStream.GetStreamSize());
 			this->_text = std::string{vData.begin(), vData.end()};
+			return true;
 		}
 
 		[[nodiscard]] const std::string& Text() const noexcept { return this->_text; }
