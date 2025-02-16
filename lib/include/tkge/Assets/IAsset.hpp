@@ -135,6 +135,6 @@ namespace tkge::Assets
 	{
 	  public:
 		virtual ~IAsset() = default;
-		virtual void Load(ReadonlyByteStream) = 0;
+		virtual bool Load(ReadonlyByteStream) = 0;
 	};
 } // namespace tkge::Assets
