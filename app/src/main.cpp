@@ -50,14 +50,14 @@ namespace
 		const auto& renderDevice = engine.RenderDevice();
 		if (!shader.Load(renderDevice.get_device(), vertexSpirV, fragmentSpirV)) { throw std::runtime_error{"Failed to load shaders"}; }
 
-		const auto vertices = std::array{
-			tkge::graphics::Vertex{.position = {-0.5f, -0.5f}, .colour = kvf::red_v.to_linear()},
-			tkge::graphics::Vertex{.position = {0.5f, -0.5f}, .colour = kvf::green_v.to_linear()},
-			tkge::graphics::Vertex{.position = {0.5f, 0.5f}, .colour = kvf::blue_v.to_linear()},
-			tkge::graphics::Vertex{.position = {-0.5f, 0.5f}, .colour = kvf::yellow_v.to_linear()},
+		constexpr auto vertices = std::array{
+			tkge::graphics::Vertex{.position = {-0.5f, -0.5f}, .colour = kvf::red_v.to_vec4()},
+			tkge::graphics::Vertex{.position = {0.5f, -0.5f}, .colour = kvf::green_v.to_vec4()},
+			tkge::graphics::Vertex{.position = {0.5f, 0.5f}, .colour = kvf::blue_v.to_vec4()},
+			tkge::graphics::Vertex{.position = {-0.5f, 0.5f}, .colour = kvf::yellow_v.to_vec4()},
 		};
 
-		const auto indices = std::array{
+		constexpr auto indices = std::array{
 			0u, 1u, 2u, 2u, 3u, 0u,
 		};
 
