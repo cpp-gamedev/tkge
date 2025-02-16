@@ -1,5 +1,6 @@
 #pragma once
 #include <Tkge/Graphics/Primitive.hpp>
+#include <Tkge/Graphics/RenderInstance.hpp>
 #include <Tkge/Graphics/ResourcePool.hpp>
 #include <Tkge/Transform.hpp>
 #include <kvf/render_pass.hpp>
@@ -26,15 +27,22 @@ namespace Tkge::Graphics
 		void SetLineWidth(float width);
 		void SetWireframe(bool wireframe);
 
-		void Draw(const Primitive& primitive);
+		void Draw(const Primitive& primitive, std::span<const RenderInstance> instances);
 
 		explicit operator bool() const { return IsRendering(); }
 
 		Transform view{};
 
 	  private:
+		struct Std430Instance
+		{
+			glm::mat4 model;
+			glm::vec4 tint;
+		};
+
+		void UpdateInstances(std::span<const RenderInstance> instances);
 		[[nodiscard]] bool WriteSets() const;
-		void BindVboAndDraw(const Primitive& primitive) const;
+		void BindVboAndDraw(const Primitive& primitive, std::uint32_t instances) const;
 
 		kvf::RenderPass* _renderPass{};
 		IResourcePool* _resourcePool{};
@@ -45,5 +53,6 @@ namespace Tkge::Graphics
 		vk::Pipeline _pipeline{};
 		vk::PolygonMode _polygonMode{vk::PolygonMode::eFill};
 		float _lineWidth{1.0f};
+		std::vector<Std430Instance> _instances{};
 	};
 } // namespace Tkge::Graphics

@@ -29,8 +29,6 @@ namespace Tkge::Graphics
 		return true;
 	}
 
-	void Renderer::SetWireframe(const bool wireframe) { _polygonMode = wireframe ? vk::PolygonMode::eLine : vk::PolygonMode::eFill; }
-
 	void Renderer::SetLineWidth(const float width)
 	{
 		if (_renderPass == nullptr) { return; }
@@ -38,9 +36,11 @@ namespace Tkge::Graphics
 		_lineWidth = std::clamp(width, limits[0], limits[1]);
 	}
 
-	void Renderer::Draw(const Primitive& primitive)
+	void Renderer::SetWireframe(const bool wireframe) { _polygonMode = wireframe ? vk::PolygonMode::eLine : vk::PolygonMode::eFill; }
+
+	void Renderer::Draw(const Primitive& primitive, std::span<const RenderInstance> instances)
 	{
-		if (!IsRendering() || _shader == nullptr || primitive.vertices.empty()) { return; }
+		if (!IsRendering() || _shader == nullptr || primitive.vertices.empty() || instances.empty()) { return; }
 
 		const auto fixedState = PipelineFixedState{
 			.colourFormat = _renderPass->get_color_format(),
@@ -56,11 +56,22 @@ namespace Tkge::Graphics
 			_renderPass->bind_pipeline(_pipeline);
 		}
 
+		UpdateInstances(instances);
 		if (!WriteSets()) { return; }
 
 		_renderPass->get_command_buffer().setViewport(0, _viewport);
 
-		BindVboAndDraw(primitive);
+		BindVboAndDraw(primitive, std::uint32_t(instances.size()));
+	}
+
+	void Renderer::UpdateInstances(std::span<const RenderInstance> instances)
+	{
+		_instances.clear();
+		_instances.reserve(instances.size());
+		for (const auto& instance : instances)
+		{
+			_instances.push_back(Std430Instance{.model = instance.transform.ToModel(), .tint = instance.tint.to_linear()});
+		}
 	}
 
 	bool Renderer::WriteSets() const
@@ -91,6 +102,11 @@ namespace Tkge::Graphics
 		kvf::util::overwrite(ubo00, matVP);
 		pushBufferWrite(descriptorSets[0], 0, ubo00, vk::DescriptorType::eUniformBuffer);
 
+		const auto instanceSpan = std::span{_instances};
+		auto& ssbo01 = _resourcePool->AllocateBuffer(vk::BufferUsageFlagBits::eStorageBuffer, instanceSpan.size_bytes());
+		kvf::util::overwrite(ssbo01, instanceSpan);
+		pushBufferWrite(descriptorSets[0], 1, ssbo01, vk::DescriptorType::eStorageBuffer);
+
 		const auto writeSpan = std::span{descriptorWrites.data(), descriptorWrites.size()};
 		renderDevice.get_device().updateDescriptorSets(writeSpan, {});
 
@@ -100,7 +116,7 @@ namespace Tkge::Graphics
 		return true;
 	}
 
-	void Renderer::BindVboAndDraw(const Primitive& primitive) const
+	void Renderer::BindVboAndDraw(const Primitive& primitive, const std::uint32_t instances) const
 	{
 		const auto vertSize = primitive.vertices.size_bytes();
 		const auto vboSize = vertSize + primitive.indices.size_bytes();
@@ -112,11 +128,11 @@ namespace Tkge::Graphics
 		commandBuffer.setLineWidth(_lineWidth);
 
 		commandBuffer.bindVertexBuffers(0, vertexBuffer.get_buffer(), vk::DeviceSize{});
-		if (primitive.indices.empty()) { commandBuffer.draw(std::uint32_t(primitive.vertices.size()), 1, 0, 0); }
+		if (primitive.indices.empty()) { commandBuffer.draw(std::uint32_t(primitive.vertices.size()), instances, 0, 0); }
 		else
 		{
 			commandBuffer.bindIndexBuffer(vertexBuffer.get_buffer(), vertSize, vk::IndexType::eUint32);
-			commandBuffer.drawIndexed(std::uint32_t(primitive.indices.size()), 1, 0, 0, 0);
+			commandBuffer.drawIndexed(std::uint32_t(primitive.indices.size()), instances, 0, 0, 0);
 		}
 	}
 } // namespace Tkge::Graphics
