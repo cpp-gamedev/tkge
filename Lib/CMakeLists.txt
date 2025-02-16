@@ -1,4 +1,4 @@
-project(${project_name}-lib)
+project(${project_name}-Lib)
 
 add_library(${PROJECT_NAME})
 add_library(${project_name}::lib ALIAS ${PROJECT_NAME})
@@ -8,7 +8,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-  Src
+  rc
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC

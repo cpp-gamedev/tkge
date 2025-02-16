@@ -7,7 +7,7 @@ if [[ ! -d ./App ]]; then
   exit 1
 fi
 
-files=$(find app lib -name "*.?pp")
+files=$(find App Lib -name "*.?pp")
 
 if [[ "$files" == "" ]]; then
   echo "-- No source files found"

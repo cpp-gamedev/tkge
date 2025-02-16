@@ -1,4 +1,4 @@
-project(${project_name}-app)
+project(${project_name}-App)
 
 add_executable(${PROJECT_NAME})
 
