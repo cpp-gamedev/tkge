@@ -173,7 +173,7 @@ namespace tkge::assets::detail
 #else
 #error Not implemented yet
 #endif
-} // namespace tkge::Assets::detail
+} // namespace tkge::assets::detail
 
 tkge::assets::ReadonlyByteStream::ReadonlyByteStream(const std::string& filename)
 	: _file(std::make_unique<tkge::assets::detail::MemoryMappedFileImplementation>(filename))

@@ -137,4 +137,4 @@ namespace tkge::assets
 		virtual ~IAsset() = default;
 		virtual bool Load(ReadonlyByteStream) = 0;
 	};
-} // namespace tkge::Assets
+} // namespace tkge::assets

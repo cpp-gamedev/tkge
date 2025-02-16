@@ -15,4 +15,4 @@ namespace tkge::assets
 	  private:
 		std::string _text;
 	};
-} // namespace tkge::Assets
+} // namespace tkge::assets
