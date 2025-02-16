@@ -1,4 +1,7 @@
 #include <Tkge/Graphics/Renderer.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <klib/assert.hpp>
+#include <klib/flex_array.hpp>
 #include <kvf/render_device.hpp>
 #include <kvf/util.hpp>
 #include <algorithm>
@@ -9,6 +12,7 @@ namespace Tkge::Graphics
 		: _renderPass(renderPass), _resourcePool(resourcePool)
 	{
 		_renderPass->begin_render(commandBuffer, kvf::util::to_vk_extent(framebufferSize));
+		_viewport = _renderPass->to_viewport(kvf::uv_rect_v);
 	}
 
 	void Renderer::EndRender()
@@ -52,7 +56,48 @@ namespace Tkge::Graphics
 			_renderPass->bind_pipeline(_pipeline);
 		}
 
+		if (!WriteSets()) { return; }
+
+		_renderPass->get_command_buffer().setViewport(0, _viewport);
+
 		BindVboAndDraw(primitive);
+	}
+
+	bool Renderer::WriteSets() const
+	{
+		auto& renderDevice = _renderPass->get_render_device();
+
+		const auto setLayouts = _resourcePool->SetLayouts();
+		auto descriptorSets = std::array<vk::DescriptorSet, 1>{};
+		KLIB_ASSERT(setLayouts.size() == descriptorSets.size()); // expected set count will change until render flow is stable
+		if (!renderDevice.allocate_sets(descriptorSets, setLayouts)) { return false; }
+
+		auto bufferInfos = klib::FlexArray<vk::DescriptorBufferInfo, 4>{};
+		auto descriptorWrites = klib::FlexArray<vk::WriteDescriptorSet, 8>{};
+		const auto pushBufferWrite = [&](vk::DescriptorSet set, std::uint32_t binding, const Buffer& buffer, const vk::DescriptorType type)
+		{
+			bufferInfos.push_back({});
+			auto& dbi = bufferInfos.back();
+			dbi.setBuffer(buffer.get_buffer()).setRange(buffer.get_size());
+			auto wds = vk::WriteDescriptorSet{};
+			wds.setBufferInfo(dbi).setDescriptorCount(1).setDescriptorType(type).setDstSet(set).setDstBinding(binding);
+			descriptorWrites.push_back(wds);
+		};
+
+		auto& ubo00 = _resourcePool->AllocateBuffer(vk::BufferUsageFlagBits::eUniformBuffer, sizeof(glm::mat4));
+		const auto halfRenderArea = 0.5f * glm::vec2{_viewport.width, -_viewport.height};
+		const auto matProj = glm::ortho(-halfRenderArea.x, halfRenderArea.x, -halfRenderArea.y, halfRenderArea.y);
+		const auto matVP = matProj * view.ToView();
+		kvf::util::overwrite(ubo00, matVP);
+		pushBufferWrite(descriptorSets[0], 0, ubo00, vk::DescriptorType::eUniformBuffer);
+
+		const auto writeSpan = std::span{descriptorWrites.data(), descriptorWrites.size()};
+		renderDevice.get_device().updateDescriptorSets(writeSpan, {});
+
+		const auto setSpan = std::span{descriptorSets.data(), descriptorSets.size()};
+		_renderPass->get_command_buffer().bindDescriptorSets(vk::PipelineBindPoint::eGraphics, _resourcePool->PipelineLayout(), 0, setSpan, {});
+
+		return true;
 	}
 
 	void Renderer::BindVboAndDraw(const Primitive& primitive) const

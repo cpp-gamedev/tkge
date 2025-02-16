@@ -50,20 +50,20 @@ namespace
 		const auto& renderDevice = engine.RenderDevice();
 		if (!shader.Load(renderDevice.get_device(), vertexSpirV, fragmentSpirV)) { throw std::runtime_error{"Failed to load shaders"}; }
 
-		constexpr auto vertices = std::array{
-			Tkge::Graphics::Vertex{.position = {-0.5f, -0.5f}, .colour = kvf::red_v.to_vec4()},
-			Tkge::Graphics::Vertex{.position = {0.5f, -0.5f}, .colour = kvf::green_v.to_vec4()},
-			Tkge::Graphics::Vertex{.position = {0.5f, 0.5f}, .colour = kvf::blue_v.to_vec4()},
-			Tkge::Graphics::Vertex{.position = {-0.5f, 0.5f}, .colour = kvf::yellow_v.to_vec4()},
+		static constexpr auto Vertices = std::array{
+			Tkge::Graphics::Vertex{.position = {-200.0f, -200.0f}, .colour = kvf::red_v.to_vec4()},
+			Tkge::Graphics::Vertex{.position = {200.0f, -200.0f}, .colour = kvf::green_v.to_vec4()},
+			Tkge::Graphics::Vertex{.position = {200.0f, 200.0f}, .colour = kvf::blue_v.to_vec4()},
+			Tkge::Graphics::Vertex{.position = {-200.0f, 200.0f}, .colour = kvf::yellow_v.to_vec4()},
 		};
 
-		constexpr auto indices = std::array{
+		static constexpr auto Indices = std::array{
 			0u, 1u, 2u, 2u, 3u, 0u,
 		};
 
-		const auto primitive = Tkge::Graphics::Primitive{
-			.vertices = vertices,
-			.indices = indices,
+		static constexpr auto Primitive = Tkge::Graphics::Primitive{
+			.vertices = Vertices,
+			.indices = Indices,
 		};
 
 		auto wireframe = false;
@@ -85,7 +85,7 @@ namespace
 				renderer.BindShader(shader);
 				renderer.SetLineWidth(lineWidth);
 				renderer.SetWireframe(wireframe);
-				renderer.Draw(primitive);
+				renderer.Draw(Primitive);
 			}
 
 			engine.Present();
