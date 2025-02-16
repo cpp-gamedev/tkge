@@ -1,4 +1,4 @@
-#include <tkge/Assets/IAsset.hpp>
+#include <tkge/assets/IAsset.hpp>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -18,7 +18,7 @@
 #include <unistd.h>
 #endif
 
-namespace tkge::Assets::detail
+namespace tkge::assets::detail
 {
 #ifdef _WIN32
 	class Win32MemoryMappedFile final : public MemoryMappedFile
@@ -175,23 +175,23 @@ namespace tkge::Assets::detail
 #endif
 } // namespace tkge::Assets::detail
 
-tkge::Assets::ReadonlyByteStream::ReadonlyByteStream(const std::string& filename)
-	: _file(std::make_unique<tkge::Assets::detail::MemoryMappedFileImplementation>(filename))
+tkge::assets::ReadonlyByteStream::ReadonlyByteStream(const std::string& filename)
+	: _file(std::make_unique<tkge::assets::detail::MemoryMappedFileImplementation>(filename))
 {
 }
 
-std::span<std::byte> tkge::Assets::ReadonlyByteStream::ReadChunk(const std::size_t offset, const std::size_t size, const bool prefetchMemory)
+std::span<std::byte> tkge::assets::ReadonlyByteStream::ReadChunk(const std::size_t offset, const std::size_t size, const bool prefetchMemory)
 {
 	std::byte* const vData = static_cast<std::byte*>(this->_file->GetView());
 	if (prefetchMemory && this->_file->Capabilities() & detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
 	return std::span{vData + offset, size};
 }
 
-std::span<const std::byte> tkge::Assets::ReadonlyByteStream::ReadChunk(const std::size_t offset, const std::size_t size, const bool prefetchMemory) const
+std::span<const std::byte> tkge::assets::ReadonlyByteStream::ReadChunk(const std::size_t offset, const std::size_t size, const bool prefetchMemory) const
 {
 	const std::byte* const vData = static_cast<std::byte*>(this->_file->GetView());
 	if (prefetchMemory && this->_file->Capabilities() & detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
 	return std::span{vData + offset, size};
 }
 
-std::size_t tkge::Assets::ReadonlyByteStream::GetStreamSize() const { return this->_file->Size(); }
+std::size_t tkge::assets::ReadonlyByteStream::GetStreamSize() const { return this->_file->Size(); }

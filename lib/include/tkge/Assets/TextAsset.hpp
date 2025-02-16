@@ -2,7 +2,7 @@
 
 #include "IAsset.hpp"
 
-namespace tkge::Assets
+namespace tkge::assets
 {
 	class TextAsset final : public IAsset
 	{

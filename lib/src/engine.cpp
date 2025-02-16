@@ -1,7 +1,7 @@
 #include <klib/assert.hpp>
 #include <kvf/is_positive.hpp>
 #include <kvf/util.hpp>
-#include <tkge/engine.hpp>
+#include <tkge/Engine.hpp>
 #include <print>
 
 namespace tkge

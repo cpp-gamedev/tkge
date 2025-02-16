@@ -1,5 +1,5 @@
 #include <kvf/util.hpp>
-#include <tkge/graphics/renderer.hpp>
+#include <tkge/graphics/Renderer.hpp>
 #include <algorithm>
 
 namespace tkge::graphics

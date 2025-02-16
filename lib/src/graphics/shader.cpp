@@ -1,5 +1,5 @@
 #include <klib/hash_combine.hpp>
-#include <tkge/graphics/shader.hpp>
+#include <tkge/graphics/Shader.hpp>
 #include <array>
 
 namespace tkge::graphics

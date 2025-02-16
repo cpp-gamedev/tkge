@@ -6,7 +6,7 @@
 #include <span>
 #include <string>
 
-namespace tkge::Assets
+namespace tkge::assets
 {
 	namespace detail
 	{

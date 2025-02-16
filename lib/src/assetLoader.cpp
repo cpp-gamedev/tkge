@@ -1,4 +1,4 @@
-#include <tkge/assetLoader.hpp>
+#include <tkge/AssetLoader.hpp>
 #include <filesystem>
 
 #ifdef _WIN32

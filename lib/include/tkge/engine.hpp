@@ -5,8 +5,8 @@
 #include <kvf/render_device.hpp>
 #include <kvf/render_pass.hpp>
 #include <kvf/window.hpp>
-#include <tkge/assetLoader.hpp>
-#include <tkge/graphics/renderer.hpp>
+#include <tkge/AssetLoader.hpp>
+#include <tkge/graphics/Renderer.hpp>
 
 namespace tkge
 {

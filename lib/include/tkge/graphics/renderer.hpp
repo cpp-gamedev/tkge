@@ -1,6 +1,6 @@
 #pragma once
 #include <kvf/render_pass.hpp>
-#include <tkge/graphics/resource_pool.hpp>
+#include <tkge/graphics/ResourcePool.hpp>
 
 namespace tkge::graphics
 {

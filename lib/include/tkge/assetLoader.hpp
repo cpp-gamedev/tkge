@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tkge/Assets/IAsset.hpp>
+#include <tkge/assets/IAsset.hpp>
 #include <filesystem>
 #include <string>
 #include <type_traits>
@@ -18,7 +18,7 @@ namespace tkge
 		~AssetLoader() = default;
 
 		template <typename T>
-			requires std::is_base_of_v<Assets::IAsset, T>
+			requires std::is_base_of_v<assets::IAsset, T>
 		std::unique_ptr<T> LoadAsset(const std::string& fileName) const
 		{
 			for (const auto& path : this->_paths)
@@ -26,7 +26,7 @@ namespace tkge
 				if (std::filesystem::exists(path / fileName))
 				{
 					auto asset = std::make_unique<T>();
-					asset->Load(Assets::ReadonlyByteStream{(path / fileName).string()});
+					asset->Load(assets::ReadonlyByteStream{(path / fileName).string()});
 					return asset;
 				}
 			}
