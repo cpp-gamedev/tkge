@@ -1,6 +1,6 @@
 #pragma once
 #include <kvf/render_device.hpp>
-#include <tkge/graphics/Shader.hpp>
+#include <Tkge/graphics/Shader.hpp>
 #include <unordered_map>
 
 namespace Tkge::Graphics

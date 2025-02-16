@@ -1,4 +1,4 @@
-#include <tkge/Assets/IAsset.hpp>
+#include <Tkge/Assets/IAsset.hpp>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
