@@ -8,7 +8,7 @@ jobs:
       - name: format code
         run: chmod a+x Scripts/FormatCode.sh; Scripts/FormatCode.sh
       - name: check diff
-        run: chmod a+x .github/formatCheckDiff.sh; .github/formatCheckDiff.sh
+        run: chmod a+x .github/FormatCheckDiff.sh; .github/FormatCheckDiff.sh
   linux-gcc:
     runs-on: ubuntu-latest
     steps:
