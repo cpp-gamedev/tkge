@@ -32,7 +32,7 @@ namespace Tkge
 		return ret;
 	}
 
-	graphics::Renderer Engine::BeginRender(const kvf::Color clear)
+	Graphics::Renderer Engine::BeginRender(const kvf::Color clear)
 	{
 		if (!_cmd) { return {}; }
 
@@ -40,7 +40,7 @@ namespace Tkge
 		if (!kvf::is_positive(framebufferSize)) { return {}; }
 
 		_renderPass.clear_color = clear.to_linear();
-		return graphics::Renderer{&_renderPass, &_resourcePool, _cmd, framebufferSize};
+		return Graphics::Renderer{&_renderPass, &_resourcePool, _cmd, framebufferSize};
 	}
 
 	void Engine::Present()

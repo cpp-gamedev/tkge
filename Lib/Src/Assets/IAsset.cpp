@@ -1,4 +1,5 @@
 #include <Tkge/Assets/IAsset.hpp>
+#include <klib/assert.hpp>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -70,9 +71,7 @@ namespace Tkge::Assets::Detail
 		void Prefetch(const std::size_t offset, std::size_t size) override
 		{
 			if (size == 0) size = this->Size();
-#ifdef _DEBUG
-				// runtime_assert(size + offset <= this->Size());
-#endif
+			KLIB_ASSERT(size + offset <= this->Size());
 
 			WIN32_MEMORY_RANGE_ENTRY range{};
 			range.VirtualAddress = static_cast<BYTE*>(_vView) + offset;

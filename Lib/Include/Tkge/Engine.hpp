@@ -32,7 +32,7 @@ namespace Tkge
 
 		[[nodiscard]] bool IsRunning() const;
 		vk::CommandBuffer NextFrame();
-		[[nodiscard]] graphics::Renderer BeginRender(kvf::Color clear = kvf::black_v);
+		[[nodiscard]] Graphics::Renderer BeginRender(kvf::Color clear = kvf::black_v);
 		void Present();
 
 		[[nodiscard]] AssetLoader& GetAssetLoader() noexcept { return this->_assetLoader; }
@@ -45,7 +45,7 @@ namespace Tkge
 		kvf::RenderDevice _renderDevice;
 		kvf::RenderPass _renderPass;
 
-		graphics::ResourcePool _resourcePool;
+		Graphics::ResourcePool _resourcePool;
 
 		vk::CommandBuffer _cmd{};
 		AssetLoader _assetLoader;

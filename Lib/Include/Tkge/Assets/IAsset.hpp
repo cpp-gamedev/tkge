@@ -1,7 +1,7 @@
 #pragma once
 
+#include <klib/polymorphic.hpp>
 #include <cstddef>
-#include <fstream>
 #include <memory>
 #include <span>
 #include <string>
@@ -131,10 +131,9 @@ namespace Tkge::Assets
 		std::unique_ptr<Detail::MemoryMappedFile> _file;
 	};
 
-	class IAsset
+	class IAsset : public klib::Polymorphic
 	{
 	  public:
-		virtual ~IAsset() = default;
 		virtual bool Load(ReadonlyByteStream) = 0;
 	};
 } // namespace Tkge::Assets

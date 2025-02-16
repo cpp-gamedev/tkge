@@ -5,7 +5,7 @@
 #include <string>
 #include <type_traits>
 
-namespace tkge
+namespace Tkge
 {
 	class AssetLoader
 	{
@@ -18,7 +18,7 @@ namespace tkge
 		~AssetLoader() = default;
 
 		template <typename T>
-			requires std::is_base_of_v<assets::IAsset, T>
+			requires std::is_base_of_v<Assets::IAsset, T>
 		std::unique_ptr<T> LoadAsset(const std::string& fileName) const
 		{
 			for (const auto& path : this->_paths)
@@ -26,7 +26,7 @@ namespace tkge
 				if (std::filesystem::exists(path / fileName))
 				{
 					auto asset = std::make_unique<T>();
-					asset->Load(assets::ReadonlyByteStream{(path / fileName).string()});
+					asset->Load(Assets::ReadonlyByteStream{(path / fileName).string()});
 					return asset;
 				}
 			}
@@ -39,4 +39,4 @@ namespace tkge
 	  private:
 		std::vector<std::filesystem::path> _paths;
 	};
-} // namespace tkge
+} // namespace Tkge

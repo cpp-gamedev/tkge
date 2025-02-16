@@ -1,11 +1,11 @@
 #include <imgui.h>
+#include <Tkge/Engine.hpp>
+#include <Tkge/Graphics/Shader.hpp>
 #include <klib/assert.hpp>
-#include <tkge/Engine.hpp>
 #include <exception>
 #include <print>
 
 // temporary, until we have shader Assets.
-#include <tkge/graphics/shader.hpp>
 #include <filesystem>
 #include <fstream>
 #include <vector>
@@ -44,7 +44,7 @@ namespace
 		static constexpr Tkge::WindowSurface surface{.size = {1280, 720}};
 		Tkge::Engine engine{surface};
 
-		auto shader = Tkge::graphics::Shader{};
+		auto shader = Tkge::Graphics::Shader{};
 		const auto vertexSpirV = LoadSpirV((assets_path / "shaders/triangle.vert").string().c_str());
 		const auto fragmentSpirV = LoadSpirV((assets_path / "shaders/triangle.frag").string().c_str());
 		const auto& renderDevice = engine.RenderDevice();

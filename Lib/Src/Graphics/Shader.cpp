@@ -2,7 +2,7 @@
 #include <klib/hash_combine.hpp>
 #include <array>
 
-namespace Tkge::graphics
+namespace Tkge::Graphics
 {
 	namespace
 	{
@@ -37,4 +37,4 @@ namespace Tkge::graphics
 
 		return true;
 	}
-} // namespace Tkge::graphics
+} // namespace Tkge::Graphics

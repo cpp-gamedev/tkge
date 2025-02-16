@@ -1,5 +1,5 @@
 #pragma once
-#include <Tkge/graphics/Shader.hpp>
+#include <Tkge/Graphics/Shader.hpp>
 #include <kvf/render_device.hpp>
 #include <unordered_map>
 

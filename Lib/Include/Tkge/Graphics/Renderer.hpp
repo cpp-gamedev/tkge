@@ -1,5 +1,5 @@
 #pragma once
-#include <Tkge/graphics/ResourcePool.hpp>
+#include <Tkge/Graphics/ResourcePool.hpp>
 #include <kvf/render_pass.hpp>
 
 namespace Tkge::Graphics
