@@ -176,21 +176,21 @@ namespace Tkge::Assets::Detail
 } // namespace Tkge::Assets::Detail
 
 Tkge::Assets::ReadonlyByteStream::ReadonlyByteStream(const std::string& filename)
-	: _file(std::make_unique<Tkge::Assets::detail::MemoryMappedFileImplementation>(filename))
+	: _file(std::make_unique<Tkge::Assets::Detail::MemoryMappedFileImplementation>(filename))
 {
 }
 
 std::span<std::byte> Tkge::Assets::ReadonlyByteStream::ReadChunk(const std::size_t offset, const std::size_t size, const bool prefetchMemory)
 {
 	std::byte* const vData = static_cast<std::byte*>(this->_file->GetView());
-	if (prefetchMemory && this->_file->Capabilities() & detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
+	if (prefetchMemory && this->_file->Capabilities() & Detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
 	return std::span{vData + offset, size};
 }
 
 std::span<const std::byte> Tkge::Assets::ReadonlyByteStream::ReadChunk(const std::size_t offset, const std::size_t size, const bool prefetchMemory) const
 {
 	const std::byte* const vData = static_cast<std::byte*>(this->_file->GetView());
-	if (prefetchMemory && this->_file->Capabilities() & detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
+	if (prefetchMemory && this->_file->Capabilities() & Detail::MemoryFileCapabilities::Prefetch) this->_file->Prefetch(offset, size);
 	return std::span{vData + offset, size};
 }
 

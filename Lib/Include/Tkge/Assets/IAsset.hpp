@@ -128,7 +128,7 @@ namespace Tkge::Assets
 		std::span<std::byte> ReadChunk(std::size_t offset, std::size_t size, bool prefetchMemory);
 		std::span<const std::byte> ReadChunk(std::size_t offset, std::size_t size, bool prefetchMemory) const;
 
-		std::unique_ptr<detail::MemoryMappedFile> _file;
+		std::unique_ptr<Detail::MemoryMappedFile> _file;
 	};
 
 	class IAsset

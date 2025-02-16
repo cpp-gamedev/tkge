@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Tkge/assets/IAsset.hpp>
+#include <Tkge/Assets/IAsset.hpp>
 #include <filesystem>
 #include <string>
 #include <type_traits>
