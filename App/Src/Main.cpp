@@ -2,6 +2,8 @@
 #include <Tkge/Engine.hpp>
 #include <Tkge/Graphics/Shader.hpp>
 #include <klib/assert.hpp>
+#include <kvf/time.hpp>
+#include <cmath>
 #include <exception>
 #include <print>
 
@@ -51,10 +53,10 @@ namespace
 		if (!shader.Load(renderDevice.get_device(), vertexSpirV, fragmentSpirV)) { throw std::runtime_error{"Failed to load shaders"}; }
 
 		static constexpr auto Vertices = std::array{
-			Tkge::Graphics::Vertex{.position = {-200.0f, -200.0f}, .colour = kvf::red_v.to_vec4()},
-			Tkge::Graphics::Vertex{.position = {200.0f, -200.0f}, .colour = kvf::green_v.to_vec4()},
-			Tkge::Graphics::Vertex{.position = {200.0f, 200.0f}, .colour = kvf::blue_v.to_vec4()},
-			Tkge::Graphics::Vertex{.position = {-200.0f, 200.0f}, .colour = kvf::yellow_v.to_vec4()},
+			Tkge::Graphics::Vertex{.position = {-200.0f, -200.0f}},
+			Tkge::Graphics::Vertex{.position = {200.0f, -200.0f}},
+			Tkge::Graphics::Vertex{.position = {200.0f, 200.0f}},
+			Tkge::Graphics::Vertex{.position = {-200.0f, 200.0f}},
 		};
 
 		static constexpr auto Indices = std::array{
@@ -66,12 +68,27 @@ namespace
 			.indices = Indices,
 		};
 
+		auto instances = std::array<Tkge::Graphics::RenderInstance, 2>{};
+		instances[0].transform.position.x = -250.0f;
+		instances[0].tint = kvf::cyan_v;
+		instances[1].transform.position.x = 250.0f;
+		instances[1].tint = kvf::yellow_v;
+
 		auto wireframe = false;
 		auto lineWidth = 3.0f;
+
+		auto deltaTime = kvf::DeltaTime{};
+		auto elapsed = kvf::Seconds{};
 
 		while (engine.IsRunning())
 		{
 			engine.NextFrame();
+
+			const auto dt = deltaTime.tick();
+			elapsed += dt;
+
+			instances[0].tint.w = kvf::Color::to_u8((0.5f * std::sin(elapsed.count())) + 0.5f);
+			instances[1].tint.w = kvf::Color::to_u8((0.5f * std::sin(-elapsed.count())) + 0.5f);
 
 			if (ImGui::Begin("Misc"))
 			{
@@ -85,7 +102,7 @@ namespace
 				renderer.BindShader(shader);
 				renderer.SetLineWidth(lineWidth);
 				renderer.SetWireframe(wireframe);
-				renderer.Draw(Primitive);
+				renderer.Draw(Primitive, instances);
 			}
 
 			engine.Present();
