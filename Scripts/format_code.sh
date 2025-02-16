@@ -2,7 +2,7 @@
 
 [[ ! $(clang-format --version) ]] && exit 1
 
-if [[ ! -d ./app ]]; then
+if [[ ! -d ./App ]]; then
   echo "Please run script from the project root"
   exit 1
 fi
