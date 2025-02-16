@@ -14,7 +14,7 @@ namespace tkge
 			requires std::is_base_of_v<Assets::IAsset, T>
 		std::unique_ptr<T> LoadAsset(const std::string& fileName) const
 		{
-			const std::vector<std::filesystem::path> paths = this->GetSearchPaths();
+			const static std::vector<std::filesystem::path> paths = this->GetSearchPaths();
 
 			for (const auto& path : paths)
 			{
