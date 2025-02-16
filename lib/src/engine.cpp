@@ -19,6 +19,7 @@ namespace tkge
 	vk::CommandBuffer Engine::NextFrame()
 	{
 		_cmd = _renderDevice.next_frame();
+		_resourcePool.NextFrame();
 		return _cmd;
 	}
 

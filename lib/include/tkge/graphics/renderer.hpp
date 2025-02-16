@@ -1,5 +1,6 @@
 #pragma once
 #include <kvf/render_pass.hpp>
+#include <tkge/graphics/primitive.hpp>
 #include <tkge/graphics/resource_pool.hpp>
 
 namespace tkge::graphics
@@ -24,12 +25,13 @@ namespace tkge::graphics
 		void SetLineWidth(float width);
 		void SetWireframe(bool wireframe);
 
-		// temporary, until we have vertices, primitives, etc
-		void Draw(std::uint32_t vertices);
+		void Draw(const Primitive& primitive);
 
 		explicit operator bool() const { return IsRendering(); }
 
 	  private:
+		void BindVboAndDraw(const Primitive& primitive) const;
+
 		kvf::RenderPass* _renderPass{};
 		ResourcePool* _resourcePool{};
 
