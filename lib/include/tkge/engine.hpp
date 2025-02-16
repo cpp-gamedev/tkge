@@ -5,7 +5,8 @@
 #include <kvf/render_device.hpp>
 #include <kvf/render_pass.hpp>
 #include <kvf/window.hpp>
-#include "assetLoader.hpp"
+#include <tkge/assetLoader.hpp>
+#include <tkge/graphics/renderer.hpp>
 
 namespace tkge
 {
@@ -24,7 +25,6 @@ namespace tkge
 		explicit Engine(const WindowSurface& surface = {}, vk::SampleCountFlagBits aa = AntiAliasing);
 
 		[[nodiscard]] const kvf::RenderDevice& RenderDevice() const { return _renderDevice; }
-		[[nodiscard]] const kvf::RenderPass& RenderPass() const { return _renderPass; }
 
 		[[nodiscard]] glm::ivec2 FramebufferSize() const;
 		[[nodiscard]] auto FramebufferFormat() const -> vk::Format { return _renderPass.get_color_format(); }
@@ -32,9 +32,8 @@ namespace tkge
 
 		[[nodiscard]] bool IsRunning() const;
 		vk::CommandBuffer NextFrame();
-		// TODO: return Renderer
-		void BeginRender(kvf::Color clear = kvf::black_v);
-		void EndRender();
+		[[nodiscard]] graphics::Renderer BeginRender(kvf::Color clear = kvf::black_v);
+		void Present();
 
 		[[nodiscard]] AssetLoader& GetAssetLoader() noexcept { return this->_assetLoader; }
 		[[nodiscard]] const AssetLoader& GetAssetLoader() const noexcept { return this->_assetLoader; }
@@ -45,6 +44,8 @@ namespace tkge
 		kvf::UniqueWindow _window;
 		kvf::RenderDevice _renderDevice;
 		kvf::RenderPass _renderPass;
+
+		graphics::ResourcePool _resourcePool;
 
 		vk::CommandBuffer _cmd{};
 		AssetLoader _assetLoader;
