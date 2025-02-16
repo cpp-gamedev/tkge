@@ -1,12 +1,12 @@
 #pragma once
+#include <Tkge/AssetLoader.hpp>
+#include <Tkge/Graphics/Renderer.hpp>
 #include <glm/vec2.hpp>
 #include <klib/c_string.hpp>
 #include <kvf/color.hpp>
 #include <kvf/render_device.hpp>
 #include <kvf/render_pass.hpp>
 #include <kvf/window.hpp>
-#include <Tkge/AssetLoader.hpp>
-#include <Tkge/Graphics/Renderer.hpp>
 
 namespace Tkge
 {

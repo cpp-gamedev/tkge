@@ -1,5 +1,5 @@
-#include <klib/hash_combine.hpp>
 #include <Tkge/Graphics/Shader.hpp>
+#include <klib/hash_combine.hpp>
 #include <array>
 
 namespace Tkge::graphics
@@ -37,4 +37,4 @@ namespace Tkge::graphics
 
 		return true;
 	}
-} // namespace Tkge::Graphics
+} // namespace Tkge::graphics

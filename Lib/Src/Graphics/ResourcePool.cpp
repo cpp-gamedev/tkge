@@ -1,5 +1,5 @@
-#include <klib/hash_combine.hpp>
 #include <Tkge/Graphics/ResourcePool.hpp>
+#include <klib/hash_combine.hpp>
 #include <vulkan/vulkan_hash.hpp>
 
 namespace Tkge::Graphics
