@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: format code
-        run: Scripts/format_code.sh
+        run: Scripts/FormatCode.sh
       - name: check diff
         run: .github/format_check_diff.sh
   linux-gcc:
