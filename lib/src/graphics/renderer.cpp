@@ -1,10 +1,11 @@
+#include <kvf/render_device.hpp>
 #include <kvf/util.hpp>
 #include <tkge/graphics/renderer.hpp>
 #include <algorithm>
 
 namespace tkge::graphics
 {
-	Renderer::Renderer(kvf::RenderPass* renderPass, ResourcePool* resourcePool, const vk::CommandBuffer commandBuffer, const glm::ivec2 framebufferSize)
+	Renderer::Renderer(kvf::RenderPass* renderPass, IResourcePool* resourcePool, const vk::CommandBuffer commandBuffer, const glm::ivec2 framebufferSize)
 		: _renderPass(renderPass), _resourcePool(resourcePool)
 	{
 		_renderPass->begin_render(commandBuffer, kvf::util::to_vk_extent(framebufferSize));
@@ -37,12 +38,12 @@ namespace tkge::graphics
 	{
 		if (!IsRendering() || _shader == nullptr || primitive.vertices.empty()) { return; }
 
-		const auto pipelineState = PipelinePool::State{
+		const auto fixedState = PipelineFixedState{
 			.colourFormat = _renderPass->get_color_format(),
 			.topology = primitive.topology,
 			.polygonMode = _polygonMode,
 		};
-		const auto pipeline = _resourcePool->pipelinePool.GetPipeline(*_shader, pipelineState);
+		const auto pipeline = _resourcePool->GetPipeline(*_shader, fixedState);
 		if (!pipeline) { return; }
 
 		if (_pipeline != pipeline)
@@ -58,7 +59,7 @@ namespace tkge::graphics
 	{
 		const auto vertSize = primitive.vertices.size_bytes();
 		const auto vboSize = vertSize + primitive.indices.size_bytes();
-		auto& vertexBuffer = _resourcePool->bufferPool.Allocate(vk::BufferUsageFlagBits::eVertexBuffer | vk::BufferUsageFlagBits::eIndexBuffer, vboSize);
+		auto& vertexBuffer = _resourcePool->AllocateBuffer(vk::BufferUsageFlagBits::eVertexBuffer | vk::BufferUsageFlagBits::eIndexBuffer, vboSize);
 		kvf::util::overwrite(vertexBuffer, primitive.vertices);
 		if (!primitive.indices.empty()) { kvf::util::overwrite(vertexBuffer, primitive.indices, vertSize); }
 

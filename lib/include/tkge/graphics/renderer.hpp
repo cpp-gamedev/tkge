@@ -15,7 +15,7 @@ namespace tkge::graphics
 
 		Renderer() = default;
 
-		explicit Renderer(kvf::RenderPass* renderPass, ResourcePool* resourcePool, vk::CommandBuffer commandBuffer, glm::ivec2 framebufferSize);
+		explicit Renderer(kvf::RenderPass* renderPass, IResourcePool* resourcePool, vk::CommandBuffer commandBuffer, glm::ivec2 framebufferSize);
 		~Renderer() { EndRender(); }
 
 		[[nodiscard]] bool IsRendering() const { return _renderPass != nullptr; }
@@ -33,7 +33,7 @@ namespace tkge::graphics
 		void BindVboAndDraw(const Primitive& primitive) const;
 
 		kvf::RenderPass* _renderPass{};
-		ResourcePool* _resourcePool{};
+		IResourcePool* _resourcePool{};
 
 		const Shader* _shader{};
 		vk::Pipeline _pipeline{};
