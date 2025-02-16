@@ -2,7 +2,7 @@
 
 #include "IAsset.hpp"
 
-namespace tkge::assets
+namespace Tkge::Assets
 {
 	class TextAsset final : public IAsset
 	{
@@ -15,4 +15,4 @@ namespace tkge::assets
 	  private:
 		std::string _text;
 	};
-} // namespace tkge::assets
+} // namespace Tkge::Assets

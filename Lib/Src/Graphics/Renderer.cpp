@@ -1,8 +1,8 @@
 #include <kvf/util.hpp>
-#include <tkge/graphics/Renderer.hpp>
+#include <tkge/Graphics/Renderer.hpp>
 #include <algorithm>
 
-namespace tkge::graphics
+namespace Tkge::Graphics
 {
 	Renderer::Renderer(kvf::RenderPass* renderPass, ResourcePool* resourcePool, const vk::CommandBuffer commandBuffer, const glm::ivec2 framebufferSize)
 		: _renderPass(renderPass), _resourcePool(resourcePool)
@@ -54,4 +54,4 @@ namespace tkge::graphics
 		commandBuffer.setLineWidth(_lineWidth);
 		commandBuffer.draw(vertices, 1, 0, 0);
 	}
-} // namespace tkge::graphics
+} // namespace Tkge::Graphics

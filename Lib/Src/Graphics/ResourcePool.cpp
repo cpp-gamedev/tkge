@@ -1,8 +1,8 @@
 #include <klib/hash_combine.hpp>
-#include <tkge/graphics/ResourcePool.hpp>
+#include <tkge/Graphics/ResourcePool.hpp>
 #include <vulkan/vulkan_hash.hpp>
 
-namespace tkge::graphics
+namespace Tkge::Graphics
 {
 	PipelinePool::PipelinePool(gsl::not_null<const kvf::RenderDevice*> renderDevice, const vk::SampleCountFlagBits framebufferSamples)
 		: _renderDevice(renderDevice), _framebufferSamples(framebufferSamples)
@@ -36,4 +36,4 @@ namespace tkge::graphics
 		return *it->second;
 	}
 
-} // namespace tkge::graphics
+} // namespace Tkge::Graphics

@@ -4,7 +4,7 @@
 #include <exception>
 #include <print>
 
-// temporary, until we have shader assets.
+// temporary, until we have shader Assets.
 #include <tkge/graphics/shader.hpp>
 #include <filesystem>
 #include <fstream>
@@ -41,10 +41,10 @@ namespace
 
 	void Run(const fs::path& assets_path)
 	{
-		static constexpr tkge::WindowSurface surface{.size = {1280, 720}};
-		tkge::Engine engine{surface};
+		static constexpr Tkge::WindowSurface surface{.size = {1280, 720}};
+		Tkge::Engine engine{surface};
 
-		auto shader = tkge::graphics::Shader{};
+		auto shader = Tkge::graphics::Shader{};
 		const auto vertexSpirV = LoadSpirV((assets_path / "shaders/triangle.vert").string().c_str());
 		const auto fragmentSpirV = LoadSpirV((assets_path / "shaders/triangle.frag").string().c_str());
 		const auto& renderDevice = engine.RenderDevice();
@@ -99,7 +99,7 @@ int main([[maybe_unused]] int argc, char** argv)
 	try
 	{
 		KLIB_ASSERT(argc > 0);
-		const auto assets_path = Upfind(*argv, "assets");
+		const auto assets_path = Upfind(*argv, "Assets");
 		Run(assets_path);
 	}
 	catch (const std::exception& e)

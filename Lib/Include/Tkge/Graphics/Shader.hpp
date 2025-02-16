@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <span>
 
-namespace tkge::graphics
+namespace Tkge::Graphics
 {
 	class Shader
 	{
@@ -20,4 +20,4 @@ namespace tkge::graphics
 		vk::UniqueShaderModule _fragment{};
 		std::size_t _hash{};
 	};
-} // namespace tkge::graphics
+} // namespace Tkge::Graphics

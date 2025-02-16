@@ -6,9 +6,9 @@
 #include <span>
 #include <string>
 
-namespace tkge::assets
+namespace Tkge::Assets
 {
-	namespace detail
+	namespace Detail
 	{
 		enum struct MemoryFileCapabilities : std::uint8_t
 		{
@@ -67,7 +67,7 @@ namespace tkge::assets
 			/// <returns>Capabilities of the implementation</returns>
 			[[nodiscard]] virtual MemoryFileCapabilities Capabilities() const noexcept = 0;
 		};
-	} // namespace detail
+	} // namespace Detail
 
 	class ReadonlyByteStream
 	{
@@ -137,4 +137,4 @@ namespace tkge::assets
 		virtual ~IAsset() = default;
 		virtual bool Load(ReadonlyByteStream) = 0;
 	};
-} // namespace tkge::assets
+} // namespace Tkge::Assets

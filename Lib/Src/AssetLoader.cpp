@@ -1,4 +1,4 @@
-#include <tkge/AssetLoader.hpp>
+#include <Tkge/AssetLoader.hpp>
 #include <filesystem>
 
 #ifdef _WIN32
@@ -10,7 +10,7 @@
 #include <minwindef.h>
 #endif
 
-std::vector<std::filesystem::path> tkge::AssetLoader::GetSearchPaths() const
+std::vector<std::filesystem::path> Tkge::AssetLoader::GetSearchPaths() const
 {
 	std::vector<std::filesystem::path> paths{};
 
@@ -21,7 +21,7 @@ std::vector<std::filesystem::path> tkge::AssetLoader::GetSearchPaths() const
 	GetModuleFileNameA(nullptr, buffer, MAX_PATH);
 
 	paths.push_back(std::filesystem::path{buffer}.parent_path());
-	paths.push_back(paths.back() / "assets");
+	paths.push_back(paths.back() / "Assets");
 #else
 #endif
 

@@ -1,8 +1,8 @@
 #include <klib/hash_combine.hpp>
-#include <tkge/graphics/Shader.hpp>
+#include <tkge/Graphics/Shader.hpp>
 #include <array>
 
-namespace tkge::graphics
+namespace Tkge::graphics
 {
 	namespace
 	{
@@ -37,4 +37,4 @@ namespace tkge::graphics
 
 		return true;
 	}
-} // namespace tkge::graphics
+} // namespace Tkge::Graphics

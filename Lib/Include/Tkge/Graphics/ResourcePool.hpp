@@ -3,7 +3,7 @@
 #include <tkge/graphics/Shader.hpp>
 #include <unordered_map>
 
-namespace tkge::graphics
+namespace Tkge::Graphics
 {
 	class PipelinePool
 	{
@@ -40,4 +40,4 @@ namespace tkge::graphics
 
 		PipelinePool pipelinePool;
 	};
-} // namespace tkge::graphics
+} // namespace Tkge::Graphics

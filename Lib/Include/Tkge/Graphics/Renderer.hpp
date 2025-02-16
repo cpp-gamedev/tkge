@@ -2,7 +2,7 @@
 #include <kvf/render_pass.hpp>
 #include <tkge/graphics/ResourcePool.hpp>
 
-namespace tkge::graphics
+namespace Tkge::Graphics
 {
 	class Renderer
 	{
@@ -38,4 +38,4 @@ namespace tkge::graphics
 		vk::PolygonMode _polygonMode{vk::PolygonMode::eFill};
 		float _lineWidth{1.0f};
 	};
-} // namespace tkge::graphics
+} // namespace Tkge::Graphics

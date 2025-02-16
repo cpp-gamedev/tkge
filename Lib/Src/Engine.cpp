@@ -1,10 +1,10 @@
 #include <klib/assert.hpp>
 #include <kvf/is_positive.hpp>
 #include <kvf/util.hpp>
-#include <tkge/Engine.hpp>
+#include <Tkge/Engine.hpp>
 #include <print>
 
-namespace tkge
+namespace Tkge
 {
 	Engine::Engine(const WindowSurface& surface, const vk::SampleCountFlagBits aa)
 		: _window(CreateWindow(surface)), _renderDevice(_window.get()), _renderPass(&_renderDevice, aa), _resourcePool(&_renderDevice, aa)
@@ -48,4 +48,4 @@ namespace tkge
 		if (_renderPass.get_command_buffer()) { _renderPass.end_render(); }
 		_renderDevice.render(_renderPass.render_target());
 	}
-} // namespace tkge
+} // namespace Tkge

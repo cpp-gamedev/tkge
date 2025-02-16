@@ -5,10 +5,10 @@
 #include <kvf/render_device.hpp>
 #include <kvf/render_pass.hpp>
 #include <kvf/window.hpp>
-#include <tkge/AssetLoader.hpp>
-#include <tkge/graphics/Renderer.hpp>
+#include <Tkge/AssetLoader.hpp>
+#include <Tkge/Graphics/Renderer.hpp>
 
-namespace tkge
+namespace Tkge
 {
 	struct WindowSurface
 	{
@@ -50,4 +50,4 @@ namespace tkge
 		vk::CommandBuffer _cmd{};
 		AssetLoader _assetLoader;
 	};
-} // namespace tkge
+} // namespace Tkge
