@@ -20,6 +20,8 @@ namespace Tkge
 
 			[[nodiscard]] vk::PipelineLayout PipelineLayout() const final { return _pipelinePool.PipelineLayout(); }
 
+			[[nodiscard]] std::span<const vk::DescriptorSetLayout> SetLayouts() const final { return _pipelinePool.SetLayouts(); }
+
 			[[nodiscard]] vk::Pipeline GetPipeline(const Graphics::Shader& shader, const Graphics::PipelineFixedState& state) final
 			{
 				return _pipelinePool.GetPipeline(shader, state);

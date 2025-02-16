@@ -19,11 +19,13 @@ namespace Tkge::Detail
 		explicit PipelinePool(gsl::not_null<const kvf::RenderDevice*> renderDevice, vk::SampleCountFlagBits framebufferSamples)
 			: _renderDevice(renderDevice), _framebufferSamples(framebufferSamples)
 		{
-			// TODO: descriptor set layouts
-			_pipelineLayout = renderDevice->get_device().createPipelineLayoutUnique({});
+			CreateSetLayouts();
+			CreatePipelineLayout();
 		}
 
 		[[nodiscard]] vk::PipelineLayout PipelineLayout() const { return *_pipelineLayout; }
+
+		[[nodiscard]] std::span<const vk::DescriptorSetLayout> SetLayouts() const { return _setLayouts; }
 
 		/// \brief Get the Pipeline identified by the input parameters.
 		/// \param shader Shader that will be used in draw calls (dynamic Pipeline state).
@@ -69,10 +71,38 @@ namespace Tkge::Detail
 		}
 
 	  private:
+		void CreateSetLayouts()
+		{
+			static constexpr auto StageFlags = vk::ShaderStageFlagBits::eAllGraphics;
+			// set 0: builtin
+			auto set0 = std::array<vk::DescriptorSetLayoutBinding, 1>{};
+			// set 0, binding 0: view
+			set0[0].setBinding(0).setDescriptorCount(1).setDescriptorType(vk::DescriptorType::eUniformBuffer).setStageFlags(StageFlags);
+			// TODO: instances, texture bindings
+
+			// TODO: set 1: user data
+
+			auto dslci = std::array<vk::DescriptorSetLayoutCreateInfo, 1>{};
+			dslci[0].setBindings(set0);
+
+			for (const auto& createInfo : dslci) { _setLayoutStorage.push_back(_renderDevice->get_device().createDescriptorSetLayoutUnique(createInfo)); }
+			for (const auto& setLayout : _setLayoutStorage) { _setLayouts.push_back(*setLayout); }
+		}
+
+		void CreatePipelineLayout()
+		{
+			auto plci = vk::PipelineLayoutCreateInfo{};
+			plci.setSetLayouts(_setLayouts);
+			_pipelineLayout = _renderDevice->get_device().createPipelineLayoutUnique(plci);
+		}
+
 		gsl::not_null<const kvf::RenderDevice*> _renderDevice;
 		vk::SampleCountFlagBits _framebufferSamples;
 
 		vk::UniquePipelineLayout _pipelineLayout{};
+		std::vector<vk::UniqueDescriptorSetLayout> _setLayoutStorage{};
+		std::vector<vk::DescriptorSetLayout> _setLayouts{};
+
 		std::unordered_map<std::size_t, vk::UniquePipeline> _pipelines{};
 	};
 } // namespace Tkge::Detail

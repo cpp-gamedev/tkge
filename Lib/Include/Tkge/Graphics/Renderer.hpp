@@ -1,6 +1,7 @@
 #pragma once
 #include <Tkge/Graphics/Primitive.hpp>
 #include <Tkge/Graphics/ResourcePool.hpp>
+#include <Tkge/Transform.hpp>
 #include <kvf/render_pass.hpp>
 
 namespace Tkge::Graphics
@@ -29,11 +30,16 @@ namespace Tkge::Graphics
 
 		explicit operator bool() const { return IsRendering(); }
 
+		Transform view{};
+
 	  private:
+		[[nodiscard]] bool WriteSets() const;
 		void BindVboAndDraw(const Primitive& primitive) const;
 
 		kvf::RenderPass* _renderPass{};
 		IResourcePool* _resourcePool{};
+
+		vk::Viewport _viewport{};
 
 		const Shader* _shader{};
 		vk::Pipeline _pipeline{};

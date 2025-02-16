@@ -11,6 +11,7 @@ namespace Tkge::Graphics
 	{
 	  public:
 		[[nodiscard]] virtual vk::PipelineLayout PipelineLayout() const = 0;
+		[[nodiscard]] virtual std::span<const vk::DescriptorSetLayout> SetLayouts() const = 0;
 
 		/// \brief Get the Pipeline identified by the input parameters.
 		/// \param shader Shader that will be used in draw calls (dynamic Pipeline state).
