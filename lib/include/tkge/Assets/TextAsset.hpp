@@ -14,7 +14,7 @@ namespace tkge::Assets
 			this->_text = std::string{vData.begin(), vData.end()};
 		}
 
-		[[nodiscard]] const std::string& text() const noexcept { return this->_text; }
+		[[nodiscard]] const std::string& Text() const noexcept { return this->_text; }
 
 	  private:
 		std::string _text;
