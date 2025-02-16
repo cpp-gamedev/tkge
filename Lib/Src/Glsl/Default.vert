@@ -4,7 +4,8 @@ layout (location = 0) in vec2 aPos;
 layout (location = 1) in vec4 aColour;
 layout (location = 2) in vec2 aUv;
 
-layout (set = 0, binding = 0) uniform View {
+layout (set = 0, binding = 0) uniform View
+{
 	mat4 matVP;
 };
 
