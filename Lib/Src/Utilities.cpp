@@ -26,7 +26,7 @@ std::filesystem::path Tkge::Utilities::GetCurrentExecutablePath()
 	char buffer[PATH_MAX]{};
 	ssize_t length = readlink("/proc/self/exe", buffer, PATH_MAX);
 	if (length == -1) return {}; // Error case
-	CachePath = std::filesystem::path{std::string(buffer, length)}.parent_path();
+	CachePath = std::filesystem::path{std::string(buffer, static_cast<std::size_t>(length))}.parent_path();
 #else
 	static_assert(false, "Unsupported platform");
 #endif
