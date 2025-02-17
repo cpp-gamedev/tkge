@@ -1,6 +1,7 @@
 #pragma once
 #include <Tkge/Graphics/PipelineFixedState.hpp>
 #include <Tkge/Graphics/Shader.hpp>
+#include <Tkge/Graphics/Texture.hpp>
 #include <kvf/vma.hpp>
 
 namespace Tkge::Graphics
@@ -21,5 +22,7 @@ namespace Tkge::Graphics
 
 		/// \brief Allocate a Buffer for given usage and of given size.
 		[[nodiscard]] virtual Buffer& AllocateBuffer(vk::BufferUsageFlags usage, vk::DeviceSize size) = 0;
+
+		[[nodiscard]] virtual const Graphics::Texture& GetFallbackTexture() const = 0;
 	};
 } // namespace Tkge::Graphics

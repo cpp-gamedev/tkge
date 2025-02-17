@@ -10,12 +10,22 @@ namespace Tkge
 {
 	namespace
 	{
+		struct PixelBitmap
+		{
+			[[nodiscard]] constexpr kvf::Bitmap ToBitmap() const { return kvf::Bitmap{.bytes = bytes, .size = {1, 1}}; }
+
+			std::array<std::byte, 4> bytes{};
+		};
+
+		constexpr auto WhiteBitmap = std::bit_cast<PixelBitmap>(kvf::white_v);
+
 		class ResourcePool : public Graphics::IResourcePool
 		{
 		  public:
 			explicit ResourcePool(gsl::not_null<kvf::RenderDevice*> renderDevice, vk::SampleCountFlagBits framebufferSamples)
-				: _pipelinePool(renderDevice, framebufferSamples), _bufferPool(renderDevice)
+				: _pipelinePool(renderDevice, framebufferSamples), _bufferPool(renderDevice), _whiteTexture(renderDevice)
 			{
+				_whiteTexture.Create(WhiteBitmap.ToBitmap());
 			}
 
 			[[nodiscard]] vk::PipelineLayout PipelineLayout() const final { return _pipelinePool.PipelineLayout(); }
@@ -32,11 +42,14 @@ namespace Tkge
 				return _bufferPool.Allocate(usage, size);
 			}
 
+			[[nodiscard]] const Graphics::Texture& GetFallbackTexture() const final { return _whiteTexture; }
+
 			void NextFrame() { _bufferPool.NextFrame(); }
 
 		  private:
 			Detail::PipelinePool _pipelinePool;
 			Detail::BufferPool _bufferPool;
+			Graphics::Texture _whiteTexture;
 		};
 	} // namespace
 
