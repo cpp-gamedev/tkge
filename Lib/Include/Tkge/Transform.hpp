@@ -11,7 +11,7 @@ namespace Tkge
 		[[nodiscard]] auto ToView() const -> glm::mat4;
 		[[nodiscard]] auto ToInverseView() const -> glm::mat4;
 
-		[[nodiscard]] static constexpr auto Accumulate(const Transform& a, const Transform& b) -> Transform
+		[[nodiscard]] static constexpr Transform Accumulate(const Transform& a, const Transform& b)
 		{
 			return Transform{
 				.position = a.position + b.position,
