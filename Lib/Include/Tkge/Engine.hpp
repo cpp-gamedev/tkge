@@ -25,6 +25,7 @@ namespace Tkge
 		explicit Engine(const WindowSurface& surface = {}, vk::SampleCountFlagBits aa = AntiAliasing);
 
 		[[nodiscard]] const kvf::RenderDevice& RenderDevice() const { return _renderDevice; }
+		[[nodiscard]] kvf::RenderDevice& RenderDevice() { return _renderDevice; }
 
 		[[nodiscard]] glm::ivec2 FramebufferSize() const;
 		[[nodiscard]] auto FramebufferFormat() const -> vk::Format { return _renderPass.get_color_format(); }

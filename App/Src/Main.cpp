@@ -3,6 +3,7 @@
 #include <Tkge/Graphics/Drawable.hpp>
 #include <Tkge/Graphics/Shader.hpp>
 #include <klib/assert.hpp>
+#include <kvf/color_bitmap.hpp>
 #include <kvf/time.hpp>
 #include <cmath>
 #include <exception>
@@ -56,7 +57,16 @@ namespace
 		auto quad = Tkge::Graphics::Quad{};
 		quad.Create(glm::vec2{400.0f});
 		quad.transform.position.x = -250.0f;
-		quad.tint = kvf::magenta_v;
+
+		auto colourBitmap = kvf::ColorBitmap{glm::ivec2{2, 2}};
+		colourBitmap[0, 0] = kvf::red_v;
+		colourBitmap[0, 1] = kvf::green_v;
+		colourBitmap[1, 0] = kvf::blue_v;
+		colourBitmap[1, 1] = kvf::magenta_v;
+		auto texture = Tkge::Graphics::Texture{&engine.RenderDevice()};
+		texture.Create(colourBitmap.bitmap());
+		texture.sampler.filter = vk::Filter::eNearest;
+		quad.texture = &texture;
 
 		auto instancedQuad = Tkge::Graphics::InstancedQuad{};
 		instancedQuad.Create(glm::vec2{150.0f});
