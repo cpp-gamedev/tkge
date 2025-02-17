@@ -7,6 +7,9 @@
 #endif
 #include <libloaderapi.h>
 #include <minwindef.h>
+#else // defined(_WIN32)
+#include <limits.h>
+#include <unistd.h>
 #endif
 
 std::filesystem::path Tkge::Utilities::GetCurrentExecutablePath()
