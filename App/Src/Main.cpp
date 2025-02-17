@@ -2,6 +2,7 @@
 #include <Tkge/Engine.hpp>
 #include <Tkge/Graphics/Drawable.hpp>
 #include <Tkge/Graphics/Shader.hpp>
+#include <Tkge/Utilities.hpp>
 #include <klib/assert.hpp>
 #include <kvf/time.hpp>
 #include <cmath>
@@ -107,12 +108,12 @@ namespace
 	}
 } // namespace
 
-int main([[maybe_unused]] int argc, char** argv)
+int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	try
 	{
 		KLIB_ASSERT(argc > 0);
-		const auto assets_path = Upfind(*argv, "Assets");
+		const auto assets_path = Upfind(Tkge::Utilities::GetCurrentExecutablePath(), "Assets");
 		Run(assets_path);
 	}
 	catch (const std::exception& e)
