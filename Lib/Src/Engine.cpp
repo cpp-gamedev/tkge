@@ -1,5 +1,6 @@
 #include <Detail/BufferPool.hpp>
 #include <Detail/PipelinePool.hpp>
+#include <Detail/SamplerPool.hpp>
 #include <Tkge/Engine.hpp>
 #include <klib/assert.hpp>
 #include <kvf/is_positive.hpp>
@@ -23,7 +24,7 @@ namespace Tkge
 		{
 		  public:
 			explicit ResourcePool(gsl::not_null<kvf::RenderDevice*> renderDevice, vk::SampleCountFlagBits framebufferSamples)
-				: _pipelinePool(renderDevice, framebufferSamples), _bufferPool(renderDevice), _whiteTexture(renderDevice)
+				: _pipelinePool(renderDevice, framebufferSamples), _bufferPool(renderDevice), _samplerPool(renderDevice), _whiteTexture(renderDevice)
 			{
 				_whiteTexture.Create(WhiteBitmap.ToBitmap());
 			}
@@ -42,6 +43,7 @@ namespace Tkge
 				return _bufferPool.Allocate(usage, size);
 			}
 
+			[[nodiscard]] vk::Sampler GetSampler(const Graphics::TextureSampler& sampler) final { return _samplerPool.GetSampler(sampler); }
 			[[nodiscard]] const Graphics::Texture& GetFallbackTexture() const final { return _whiteTexture; }
 
 			void NextFrame() { _bufferPool.NextFrame(); }
@@ -49,6 +51,7 @@ namespace Tkge
 		  private:
 			Detail::PipelinePool _pipelinePool;
 			Detail::BufferPool _bufferPool;
+			Detail::SamplerPool _samplerPool;
 			Graphics::Texture _whiteTexture;
 		};
 	} // namespace

@@ -23,6 +23,7 @@ namespace Tkge::Graphics
 		/// \brief Allocate a Buffer for given usage and of given size.
 		[[nodiscard]] virtual Buffer& AllocateBuffer(vk::BufferUsageFlags usage, vk::DeviceSize size) = 0;
 
+		[[nodiscard]] virtual vk::Sampler GetSampler(const Graphics::TextureSampler& sampler) = 0;
 		[[nodiscard]] virtual const Graphics::Texture& GetFallbackTexture() const = 0;
 	};
 } // namespace Tkge::Graphics
