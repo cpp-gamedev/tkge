@@ -57,7 +57,7 @@ namespace Tkge::Graphics
 		}
 
 		UpdateInstances(instances);
-		if (!WriteSets(nullptr)) { return; }
+		if (!WriteSets(primitive.texture)) { return; }
 
 		_renderPass->get_command_buffer().setViewport(0, _viewport);
 
@@ -106,6 +106,7 @@ namespace Tkge::Graphics
 				.setSampler(_resourcePool->GetSampler(texture.sampler));
 			auto wds = vk::WriteDescriptorSet{};
 			wds.setImageInfo(dii).setDescriptorCount(1).setDescriptorType(vk::DescriptorType::eCombinedImageSampler).setDstSet(set).setDstBinding(binding);
+			descriptorWrites.push_back(wds);
 		};
 
 		auto& ubo00 = _resourcePool->AllocateBuffer(vk::BufferUsageFlagBits::eUniformBuffer, sizeof(glm::mat4));

@@ -24,8 +24,11 @@ namespace Tkge::Graphics
 				.vertices = this->GetVertices(),
 				.indices = this->GetIndices(),
 				.topology = this->GetTopology(),
+				.texture = texture,
 			};
 		}
+
+		const Texture* texture{nullptr};
 	};
 
 	template <std::derived_from<IGeometry> TGeometry>
