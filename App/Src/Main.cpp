@@ -1,5 +1,6 @@
 #include <imgui.h>
 #include <Tkge/Engine.hpp>
+#include <Tkge/Graphics/Drawable.hpp>
 #include <Tkge/Graphics/Shader.hpp>
 #include <klib/assert.hpp>
 #include <kvf/time.hpp>
@@ -52,27 +53,19 @@ namespace
 		const auto& renderDevice = engine.RenderDevice();
 		if (!shader.Load(renderDevice.get_device(), vertexSpirV, fragmentSpirV)) { throw std::runtime_error{"Failed to load shaders"}; }
 
-		static constexpr auto Vertices = std::array{
-			Tkge::Graphics::Vertex{.position = {-200.0f, -200.0f}},
-			Tkge::Graphics::Vertex{.position = {200.0f, -200.0f}},
-			Tkge::Graphics::Vertex{.position = {200.0f, 200.0f}},
-			Tkge::Graphics::Vertex{.position = {-200.0f, 200.0f}},
-		};
+		auto quad = Tkge::Graphics::Quad{};
+		quad.Create(glm::vec2{400.0f});
+		quad.transform.position.x = -250.0f;
+		quad.tint = kvf::magenta_v;
 
-		static constexpr auto Indices = std::array{
-			0u, 1u, 2u, 2u, 3u, 0u,
-		};
+		auto instancedQuad = Tkge::Graphics::InstancedQuad{};
+		instancedQuad.Create(glm::vec2{150.0f});
 
-		static constexpr auto Primitive = Tkge::Graphics::Primitive{
-			.vertices = Vertices,
-			.indices = Indices,
-		};
-
-		auto instances = std::array<Tkge::Graphics::RenderInstance, 2>{};
-		instances[0].transform.position.x = -250.0f;
-		instances[0].tint = kvf::cyan_v;
-		instances[1].transform.position.x = 250.0f;
-		instances[1].tint = kvf::yellow_v;
+		instancedQuad.instances.resize(2);
+		instancedQuad.instances[0].transform.position = {250.0f, -100.0f};
+		instancedQuad.instances[0].tint = kvf::cyan_v;
+		instancedQuad.instances[1].transform.position = {250.0f, 100.0f};
+		instancedQuad.instances[1].tint = kvf::yellow_v;
 
 		auto wireframe = false;
 		auto lineWidth = 3.0f;
@@ -87,8 +80,9 @@ namespace
 			const auto dt = deltaTime.tick();
 			elapsed += dt;
 
-			instances[0].tint.w = kvf::Color::to_u8((0.5f * std::sin(elapsed.count())) + 0.5f);
-			instances[1].tint.w = kvf::Color::to_u8((0.5f * std::sin(-elapsed.count())) + 0.5f);
+			instancedQuad.instances[0].tint.w = kvf::Color::to_u8((0.5f * std::sin(elapsed.count())) + 0.5f);
+			instancedQuad.instances[1].tint.w = kvf::Color::to_u8((0.5f * std::sin(-elapsed.count())) + 0.5f);
+			quad.tint.w = kvf::Color::to_u8((0.5f * std::cos(elapsed.count())) + 0.5f);
 
 			if (ImGui::Begin("Misc"))
 			{
@@ -102,7 +96,8 @@ namespace
 				renderer.BindShader(shader);
 				renderer.SetLineWidth(lineWidth);
 				renderer.SetWireframe(wireframe);
-				renderer.Draw(Primitive, instances);
+				instancedQuad.Draw(renderer);
+				quad.Draw(renderer);
 			}
 
 			engine.Present();
