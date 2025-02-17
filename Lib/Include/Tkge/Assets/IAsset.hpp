@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <memory>
 #include <span>
+#include <stdexcept>
 #include <string>
 
 namespace Tkge::Assets
