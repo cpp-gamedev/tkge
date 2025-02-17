@@ -19,6 +19,6 @@ namespace Tkge
 		/// Gets the current executable directory.
 		/// </summary>
 		/// <returns>The parent directory of the main module</returns>
-		static [[nodiscard]] std::filesystem::path GetCurrentExecutablePath();
+		[[nodiscard]] static std::filesystem::path GetCurrentExecutablePath();
 	};
 } // namespace Tkge
