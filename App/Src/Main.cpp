@@ -43,14 +43,14 @@ namespace
 		return ret;
 	}
 
-	void Run(const fs::path& assets_path)
+	void Run(const fs::path& assetsPath)
 	{
 		static constexpr Tkge::WindowSurface surface{.size = {1280, 720}};
 		Tkge::Engine engine{surface};
 
 		auto shader = Tkge::Graphics::Shader{};
-		const auto vertexSpirV = LoadSpirV((assets_path / "Shaders/Default.vert").string().c_str());
-		const auto fragmentSpirV = LoadSpirV((assets_path / "Shaders/Default.frag").string().c_str());
+		const auto vertexSpirV = LoadSpirV((assetsPath / "Shaders/Default.vert").string().c_str());
+		const auto fragmentSpirV = LoadSpirV((assetsPath / "Shaders/Default.frag").string().c_str());
 		const auto& renderDevice = engine.RenderDevice();
 		if (!shader.Load(renderDevice.get_device(), vertexSpirV, fragmentSpirV)) { throw std::runtime_error{"Failed to load shaders"}; }
 
