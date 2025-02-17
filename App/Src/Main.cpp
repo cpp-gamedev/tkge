@@ -108,7 +108,7 @@ namespace
 	}
 } // namespace
 
-int main([[maybe_unused]] int argc, [[maybe_unused]]  char** argv)
+int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	try
 	{
