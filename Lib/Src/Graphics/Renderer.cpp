@@ -57,7 +57,7 @@ namespace Tkge::Graphics
 		}
 
 		UpdateInstances(instances);
-		if (!WriteSets()) { return; }
+		if (!WriteSets(primitive.texture)) { return; }
 
 		_renderPass->get_command_buffer().setViewport(0, _viewport);
 
@@ -74,9 +74,10 @@ namespace Tkge::Graphics
 		}
 	}
 
-	bool Renderer::WriteSets() const
+	bool Renderer::WriteSets(const Texture* texture) const
 	{
 		auto& renderDevice = _renderPass->get_render_device();
+		if (texture == nullptr) { texture = &_resourcePool->GetFallbackTexture(); }
 
 		const auto setLayouts = _resourcePool->SetLayouts();
 		auto descriptorSets = std::array<vk::DescriptorSet, 1>{};
@@ -84,6 +85,7 @@ namespace Tkge::Graphics
 		if (!renderDevice.allocate_sets(descriptorSets, setLayouts)) { return false; }
 
 		auto bufferInfos = klib::FlexArray<vk::DescriptorBufferInfo, 4>{};
+		auto imageInfos = klib::FlexArray<vk::DescriptorImageInfo, 2>{};
 		auto descriptorWrites = klib::FlexArray<vk::WriteDescriptorSet, 8>{};
 		const auto pushBufferWrite = [&](vk::DescriptorSet set, std::uint32_t binding, const Buffer& buffer, const vk::DescriptorType type)
 		{
@@ -92,6 +94,18 @@ namespace Tkge::Graphics
 			dbi.setBuffer(buffer.get_buffer()).setRange(buffer.get_size());
 			auto wds = vk::WriteDescriptorSet{};
 			wds.setBufferInfo(dbi).setDescriptorCount(1).setDescriptorType(type).setDstSet(set).setDstBinding(binding);
+			descriptorWrites.push_back(wds);
+		};
+
+		const auto pushImageWrite = [&](vk::DescriptorSet set, std::uint32_t binding, const Texture& texture)
+		{
+			imageInfos.push_back({});
+			auto& dii = imageInfos.back();
+			dii.setImageView(texture.GetImage().get_view())
+				.setImageLayout(vk::ImageLayout::eShaderReadOnlyOptimal)
+				.setSampler(_resourcePool->GetSampler(texture.sampler));
+			auto wds = vk::WriteDescriptorSet{};
+			wds.setImageInfo(dii).setDescriptorCount(1).setDescriptorType(vk::DescriptorType::eCombinedImageSampler).setDstSet(set).setDstBinding(binding);
 			descriptorWrites.push_back(wds);
 		};
 
@@ -106,6 +120,8 @@ namespace Tkge::Graphics
 		auto& ssbo01 = _resourcePool->AllocateBuffer(vk::BufferUsageFlagBits::eStorageBuffer, instanceSpan.size_bytes());
 		kvf::util::overwrite(ssbo01, instanceSpan);
 		pushBufferWrite(descriptorSets[0], 1, ssbo01, vk::DescriptorType::eStorageBuffer);
+
+		pushImageWrite(descriptorSets[0], 2, *texture);
 
 		const auto writeSpan = std::span{descriptorWrites.data(), descriptorWrites.size()};
 		renderDevice.get_device().updateDescriptorSets(writeSpan, {});

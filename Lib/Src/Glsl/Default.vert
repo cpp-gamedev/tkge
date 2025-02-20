@@ -21,6 +21,7 @@ layout (set = 0, binding = 1) readonly buffer Instances
 };
 
 layout (location = 0) out vec4 outColour;
+layout (location = 1) out vec2 outUv;
 
 void main()
 {
@@ -29,6 +30,7 @@ void main()
 	const vec4 worldPos = instance.model * vec4(aPos, 0.0, 1.0);
 
 	outColour = aColour * instance.tint;
+	outUv = aUv;
 
 	gl_Position = matVP * worldPos;
 }

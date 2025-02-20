@@ -75,12 +75,13 @@ namespace Tkge::Detail
 		{
 			static constexpr auto StageFlags = vk::ShaderStageFlagBits::eAllGraphics;
 			// set 0: builtin
-			auto set0 = std::array<vk::DescriptorSetLayoutBinding, 2>{};
+			auto set0 = std::array<vk::DescriptorSetLayoutBinding, 3>{};
 			// set 0, binding 0: view
 			set0[0].setBinding(0).setDescriptorCount(1).setDescriptorType(vk::DescriptorType::eUniformBuffer).setStageFlags(StageFlags);
 			// set 0, binding 1: instances
 			set0[1].setBinding(1).setDescriptorCount(1).setDescriptorType(vk::DescriptorType::eStorageBuffer).setStageFlags(StageFlags);
-			// TODO: texture bindings
+			// set0, binding 2: texture
+			set0[2].setBinding(2).setDescriptorCount(1).setDescriptorType(vk::DescriptorType::eCombinedImageSampler).setStageFlags(StageFlags);
 
 			// TODO: set 1: user data
 
