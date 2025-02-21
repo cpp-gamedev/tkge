@@ -41,7 +41,7 @@ namespace Tkge::Graphics
 		};
 
 		void UpdateInstances(std::span<const RenderInstance> instances);
-		[[nodiscard]] bool WriteSets() const;
+		[[nodiscard]] bool WriteSets(const Texture* texture) const;
 		void BindVboAndDraw(const Primitive& primitive, std::uint32_t instances) const;
 
 		kvf::RenderPass* _renderPass{};
